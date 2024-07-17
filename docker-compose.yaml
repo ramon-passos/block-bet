@@ -1,0 +1,6 @@
+services:
+  basic-node-image:
+    image: node:18.16.0
+    working_dir: /vue-test
+    ports: 
+     - 4000:4000
