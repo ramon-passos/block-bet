@@ -4,3 +4,10 @@ services:
     working_dir: /vue-test
     ports: 
      - 4000:4000
+  server:
+    build:
+      context: ./server
+    ports: 
+     - 3000:3000
+    volumes:
+     - ./server:/server:cached
