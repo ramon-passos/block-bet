@@ -9,6 +9,7 @@ dist
 # Node dependencies
 /frontend/node_modules
 /server/node_modules
+/metacoin/node_modules
 
 # Logs
 logs
