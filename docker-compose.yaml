@@ -4,10 +4,19 @@ services:
     working_dir: /vue-test
     ports: 
      - 4000:4000
+
   server:
     build:
       context: ./server
     ports: 
-     - 3000:3000
+     - 8545:8545
     volumes:
      - ./server:/server:cached
+
+  metacoin:
+    build:
+      context: ./metacoin
+    ports:
+     - 7545:8545
+    volumes:
+     - ./metacoin:/app:cached
