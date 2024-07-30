@@ -17,6 +17,6 @@ services:
     build:
       context: ./metacoin
     ports:
-     - 7545:8545
+     - 8545:8545
     volumes:
      - ./metacoin:/app:cached
