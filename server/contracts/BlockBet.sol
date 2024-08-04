@@ -3,6 +3,12 @@
 pragma solidity ^0.8.13;
 
 contract BlockBet {
+    enum Decision {
+        UNDEFINED,
+        TRUE,
+        FALSE
+    }
+
     enum WinnerVote {
         UNDEFINED,
         OWNER,
@@ -12,13 +18,13 @@ contract BlockBet {
     enum Status {
         OPEN,
         CHALLENGED,
-        FINESHED,
-        CANCELED
+        FINISHED,
+        INVALID
     }
 
     struct Punter {
         address punterAddress;
-        bool decision;
+        Decision decision;
         WinnerVote winnerVote;
     }
 
@@ -27,12 +33,13 @@ contract BlockBet {
         bool oracleDecision;
     }
 
+    //
+
     struct Bet {
         string uuid;
         uint value;
         string description;
         address result;
-        bool invalid;
         Punter owner;
         Punter challenger;
         Punter[] punterVotes;
@@ -40,18 +47,24 @@ contract BlockBet {
         Status status;
     }
 
-	Bet[] bets;
-    mapping (address => uint) reputations;
+    Bet[] bets;
+    mapping(address => uint) reputations;
     address public escrow;
 
     event Transfer(address indexed _from, address indexed _to, uint256 _value);
 
-	constructor() {
-		escrow = address(this);
-	}
+    constructor() {
+        escrow = address(this);
+    }
 
-    function createBet(uint value, bool ownerDecision, string memory description) public returns(bool sufficient) {
+    function createBet(
+        uint value,
+        Decision ownerDecision,
+        string memory description
+    ) public returns (bool sufficient) {
         require(value > 0, "Value must be greater than 0");
+        require(msg.sender.balance >= value, "Insufficient balance");
+        require(stringLength(description) > 10, "Description too short");
 
         Punter memory owner = Punter({
             punterAddress: msg.sender,
@@ -61,7 +74,7 @@ contract BlockBet {
 
         Punter memory emptyChallenger = Punter({
             punterAddress: address(0),
-            decision: false,
+            decision: Decision.UNDEFINED,
             winnerVote: WinnerVote.UNDEFINED
         });
 
@@ -70,30 +83,35 @@ contract BlockBet {
             value: value,
             description: description,
             result: address(0),
-            invalid: false,
             owner: owner,
-            challenger: new Challenger,
+            challenger: emptyChallenger,
             punterVotes: new Punter[](0),
-            oracles: new OracleDecision[](0)
+            oracles: new OracleDecision[](0),
+            status: Status.OPEN
         });
 
-        bets.push(newBet);
         emit Transfer(msg.sender, escrow, value);
-        
+        bets.push(newBet);
+
         return true;
     }
 
-    function getBet(string memory uuid) public returns(Bet memory bet) {
+    function getBet(string memory uuid) public returns (Bet memory bet) {
         for (uint i = 0; i < bets.length; i++) {
-            if (keccak256(abi.encodePacked(bets[i].uuid)) == keccak256(abi.encodePacked(uuid))) {
+            if (
+                keccak256(abi.encodePacked(bets[i].uuid)) ==
+                keccak256(abi.encodePacked(uuid))
+            ) {
                 return bets[i];
             }
         }
     }
 
-    /* function getBets(address searcher) public returns(Bet[] bets) {
-
+    function getBets() public returns (Bet[] memory bets) {
+        return bets;
     }
+
+    /*
 
     function challengeBet() {
 
@@ -107,8 +125,9 @@ contract BlockBet {
 
     } */
 
-    function generateUUID() private returns(string memory) {
-        
+    function generateUUID() private returns (string memory) {}
+
+    function stringLength(string memory str) private returns (uint) {
+        return bytes(str).length;
     }
 }
-
