@@ -42,12 +42,11 @@ contract BlockBet {
         address result;
         Punter owner;
         Punter challenger;
-        Punter[] punterVotes;
-        OracleDecision[] oracles;
+        //OracleDecision[] oracles;
         Status status;
     }
 
-    Bet[] bets;
+    Bet[] private bets;
     mapping(address => uint) reputations;
     address public escrow;
 
@@ -85,8 +84,7 @@ contract BlockBet {
             result: address(0),
             owner: owner,
             challenger: emptyChallenger,
-            punterVotes: new Punter[](0),
-            oracles: new OracleDecision[](0),
+            // oracles: [],
             status: Status.OPEN
         });
 
@@ -96,7 +94,7 @@ contract BlockBet {
         return true;
     }
 
-    function getBet(string memory uuid) public returns (Bet memory bet) {
+    function getBet(string memory uuid) public view returns (Bet memory bet) {
         for (uint i = 0; i < bets.length; i++) {
             if (
                 keccak256(abi.encodePacked(bets[i].uuid)) ==
@@ -107,7 +105,7 @@ contract BlockBet {
         }
     }
 
-    function getBets() public returns (Bet[] memory bets) {
+    function getBets() public pure returns (Bet[] memory bets) {
         return bets;
     }
 
@@ -125,9 +123,11 @@ contract BlockBet {
 
     } */
 
-    function generateUUID() private returns (string memory) {}
+    function generateUUID() private pure returns (string memory) {
+        return "1234567890";
+    }
 
-    function stringLength(string memory str) private returns (uint) {
+    function stringLength(string memory str) private pure returns (uint) {
         return bytes(str).length;
     }
 }
