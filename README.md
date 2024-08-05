@@ -23,4 +23,28 @@ Dentro do bash do container:
     npm run truffle-console
 ```
 
+Carregue o contrato em uma constante:
+```
+    const BlockBet = artifacts.require('BlockBet');
+```
 
+Crie uma nova instância do contrato:
+```
+    let instance = await BlockBet.new();
+```
+
+Para criar uma aposta, você deve chamar a função `createBet` na instância:
+```
+    instance.createBet(1, 1, 'teste de aposta nada a ver')
+```
+
+E possivel passar um endereco de um apostador no momento de criar a bet:
+```
+    let accounts = await web3.eth.getAccounts();
+    instance.createBet(1, 1, 'teste de aposta nada a ver', {from: accounts[0]})
+```
+
+Para ver as apostas criadas, chame a função `getBets`:
+```
+    instance.getBets()
+```

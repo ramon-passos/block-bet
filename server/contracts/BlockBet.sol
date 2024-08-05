@@ -33,8 +33,6 @@ contract BlockBet {
         bool oracleDecision;
     }
 
-    //
-
     struct Bet {
         string uuid;
         uint value;
@@ -105,7 +103,7 @@ contract BlockBet {
         }
     }
 
-    function getBets() public pure returns (Bet[] memory bets) {
+    function getBets() public view returns (Bet[] memory) {
         return bets;
     }
 
