@@ -1,5 +1,5 @@
 <template>
-  <button>
+  <button @click="goToDestination">
     {{ buttonText }}
   </button>
 </template>
@@ -9,11 +9,20 @@ const props = defineProps({
   buttonText: {
     type: String,
     required: true
+  },
+  buttonRoute: {
+    type: String,
   }
 });
+
+const router = useRouter();
+
+function goToDestination() {
+  router.push(props.buttonRoute);
+};
 </script>
 
-<style>
+<style scoped>
 button {
   background-color: blueviolet;
   border: 1px solid white;
@@ -30,5 +39,4 @@ button:hover {
   border-color: black;
   transform: scale(1.05);
 }
-
 </style>

@@ -1,17 +1,17 @@
 <template>
   <div>
     <Head>
-      <Title>Connect Wallet</Title>
+      <Title>Connect your Wallet</Title>
     </Head>
   </div>
   <Navbar />
   <div
-    class="bg-gray-200 min-h-screen md:flex items-center justify-center text-white"
+    class="bg-gray-200 min-h-[80vh] md:flex items-center justify-center text-white"
   >
     <div
-      class="relative md:max-w-lg min-h-screen md:min-h-0 w-full md:mx-auto bg-black shadow-lg md:rounded-lg px-8 py-6"
+      class="relative md:max-w-lg min-h-screen md:min-h-0 w-full md:mx-auto bg-neutral-800 shadow-lg md:rounded-lg px-8 py-6"
     >
-      <Header />
+      <WalletHeader />
 
       <hr :style="{ margin: '2rem' }" />
 
@@ -26,7 +26,7 @@
       >
         <button
           v-for="(newConnector, name) in connectorsByName"
-          class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-violet-700 bg-violet-100 hover:bg-violet-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500"
           :key="name"
           @click="setActivatingConnector(newConnector)"
         >
@@ -40,7 +40,7 @@
           </span>
           <svg
             v-else-if="activatingConnector === newConnector"
-            class="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-indigo"
+            class="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-violet"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -79,6 +79,7 @@
       </div>
     </div>
   </div>
+  <Footer />
 </template>
 
 <script setup lang="ts">
@@ -129,3 +130,10 @@ const setActivatingConnector = async (newConnector: any) => {
   activatingConnector.value = undefined;
 };
 </script>
+
+<style scoped>
+body {
+  height: fit-content;
+  background-color: #e5e7eb;
+}
+</style>

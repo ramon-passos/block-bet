@@ -17,17 +17,17 @@
   </nav>
 </template>
 
-<script setup> 
+<script setup>
 
 
 </script>
 
-<style>
+<style scoped>
 .navbar {
   height: 120px;
   width: 100%;
   margin: 0;
-  background-color: rgba(0, 0, 0, 0.849);
+  background-color: #262626;
   display: flex;
   justify-content: center;
   align-items: center;

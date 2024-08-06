@@ -11,19 +11,18 @@
       <h1>
         Apostas Ativas
       </h1>
-      <Button buttonText="Criar minha aposta" />
+      <Button buttonText="Criar minha aposta" buttonRoute="/bet/create">
+      </Button>
     </div>
-    <DashBoard />
+    <HomeDashBoard />
   </section>
+  <Footer />
 </template>
 
 <script setup>
-import Navbar from '~~/components/Navbar.vue';
-import DashBoard from '~~/components/DashBoard.vue';
-import Button from '~~/components/Button.vue';
 </script>
 
-<style>
+<style scoped>
 body {
   height: 1500px;
 }

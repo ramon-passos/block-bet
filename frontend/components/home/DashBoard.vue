@@ -1,7 +1,7 @@
 <template>
   <section class="dashboard-panel">
-    <DashBoardItem />
-    <DashBoardItem />
+    <HomeDashBoardItem />
+    <HomeDashBoardItem />
   </section>
 </template>
 

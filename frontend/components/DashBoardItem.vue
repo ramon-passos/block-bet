@@ -22,15 +22,10 @@
       </div>
     </div>
   </section>
+  <hr>
 </template>
 
-<script>
-export default defineComponent({
-  name: "DashBoardItem",
-  setup() {
-
-  },
-})
+<script setup>
 </script>
 
 <style>
@@ -45,6 +40,7 @@ export default defineComponent({
 
 .row {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .column {
