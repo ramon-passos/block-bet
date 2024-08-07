@@ -32,10 +32,11 @@
   height: 120px;
   width: 100%;
   margin: 0;
-  background-color: #262626;
+  background-color: #1f1e1e;
   display: flex;
   justify-content: center;
   align-items: center;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .navbar-content {
@@ -55,7 +56,7 @@
 .logo-wrapper p {
   color: white;
   font-size: 30px;
-  font-weight: 400;
+  font-weight: 900;
   font-family: Lexend, sans-serif
 }
 

@@ -59,6 +59,10 @@ function showBet() {
   display: flex;
 }
 
+#id-col {
+  font-weight: lighter;
+}
+
 #desc-col {
   flex: 5;
 }
@@ -66,7 +70,7 @@ function showBet() {
 hr {
   border: none;
   height: 1px;
-  background: linear-gradient(to right, rgb(31, 150, 255), rgb(187, 0, 255), rgb(226, 14, 208)); /* Gradiente de cor */
+  background: linear-gradient(to right, rgb(31, 150, 255), rgb(187, 0, 255), rgb(226, 14, 208));
   width: 80%;
   margin: auto;
 }
