@@ -23,6 +23,11 @@
 </script>
 
 <style scoped>
+@font-face {
+  font-family: 'FonteLogo';
+  src: url('~/assets/fonts/fonte-logo.ttf') format('ttf');
+}
+
 .navbar {
   height: 120px;
   width: 100%;
@@ -47,10 +52,11 @@
   gap: 4px;
 }
 
-.navbar p {
+.logo-wrapper p {
   color: white;
   font-size: 30px;
-  font-weight: 800;
+  font-weight: 400;
+  font-family: Lexend, sans-serif
 }
 
 #logo-nav {
@@ -58,7 +64,9 @@
 }
 
 #link {
+  font-family: Gabarito, sans-serif;
   font-size: 16px;
+  color: white;
   width: max-content;
   position: absolute;
   margin-left: 500px;

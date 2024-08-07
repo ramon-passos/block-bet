@@ -3,7 +3,7 @@
     <section class="bet-info">
       <div class="col">
         <div class="row" id="bet-title">
-          <p>titulo teste</p>
+          <h1>Aposta #X</h1>
         </div>
         <div class="row">
           <div class="col">
@@ -13,7 +13,7 @@
             <p>info teste1</p>
           </div>
         </div>
-        <div class="row">
+        <div class="row" id="join-bet-row">
           <Button id="join-bet-id" buttonText="Entrar na aposta" />
         </div>
       </div>
@@ -27,13 +27,19 @@
 <style scoped>
 .bet-wrapper {
   background-color: white;
-  margin: 10vh 30vh;
+  display: flex;
+  justify-content: center;
+  padding: 50px;
 }
 
 .bet-info {
+  width: 70%;
+  margin: 0;
   padding: 30px 70px;
   background-color: rgb(233, 240, 238);
-  border: 0 solid white;
+  border: 1 solid white;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 15px;
   display: flex;
 }
 
@@ -43,14 +49,7 @@
   font-size: 30px;
 }
 
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.col {
-  flex: 1;
-  justify-content: center;
+#join-bet-row {
+  justify-content: end;
 }
 </style>

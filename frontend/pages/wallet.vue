@@ -6,7 +6,7 @@
   </div>
   <Navbar />
   <div
-    class="bg-gray-200 min-h-[80vh] md:flex items-center justify-center text-white"
+    class="bg-white min-h-[80vh] md:flex items-center justify-center text-white"
   >
     <div
       class="relative md:max-w-lg min-h-screen md:min-h-0 w-full md:mx-auto bg-neutral-800 shadow-lg md:rounded-lg px-8 py-6"

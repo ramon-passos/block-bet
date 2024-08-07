@@ -38,5 +38,6 @@ button:hover {
   color: black;
   border-color: black;
   transform: scale(1.05);
+  cursor: pointer;
 }
 </style>

@@ -59,17 +59,6 @@ function showBet() {
   display: flex;
 }
 
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.col {
-  flex: 1;
-  justify-content: center;
-}
-
 #desc-col {
   flex: 5;
 }
