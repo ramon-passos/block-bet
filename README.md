@@ -48,3 +48,17 @@ Para ver as apostas criadas, chame a função `getBets`:
 ```
     instance.getBets()
 ```
+
+Para desafiar uma aposta, chame a função `challengeBet`:
+```
+instance.challengeBet('uuid', 2, {from: accounts[1]})
+```
+
+Para votar no vencedor de uma aposta, chame a função `voteWinner`:
+```
+instance.voteWinner('uuid', 1, {from: accounts[0]})
+```
+Para finalizar uma aposta, chame a função `finalizeBet`:
+```
+instance.finalizeBet('uuid')
+```

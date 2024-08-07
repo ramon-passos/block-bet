@@ -19,6 +19,7 @@ contract BlockBet {
         OPEN,
         CHALLENGED,
         FINISHED,
+        CONTESTED,
         INVALID
     }
 
@@ -107,22 +108,149 @@ contract BlockBet {
         return bets;
     }
 
+    //TODO: Use getBet to check if bet exists instead of looping through all bets
+
+    function challengeBet(
+        string memory uuid,
+        Decision challengerDecision
+    ) public returns (bool sufficient) {
+        for (uint i = 0; i < bets.length; i++) {
+            if (
+                keccak256(abi.encodePacked(bets[i].uuid)) ==
+                keccak256(abi.encodePacked(uuid))
+            ) {
+                require(
+                    bets[i].status == Status.OPEN,
+                    "Bet is not open for challenge"
+                );
+                require(
+                    msg.sender != bets[i].owner.punterAddress,
+                    "Owner cannot challenge own bet"
+                );
+                require(
+                    msg.sender.balance >= bets[i].value,
+                    "Insufficient balance"
+                );
+                require(
+                    challengerDecision != Decision.UNDEFINED,
+                    "Decision must be defined"
+                );
+                require(
+                    bets[i].owner.decision != Decision.UNDEFINED,
+                    "Owner decision must be defined"
+                );
+                require(
+                    bets[i].owner.decision != challengerDecision,
+                    "Challenger decision must be different from owner"
+                );
+
+                Punter memory challenger = Punter({
+                    punterAddress: msg.sender,
+                    decision: challengerDecision,
+                    winnerVote: WinnerVote.UNDEFINED
+                });
+
+                emit Transfer(msg.sender, escrow, bets[i].value);
+
+                bets[i].challenger = challenger;
+                bets[i].status = Status.CHALLENGED;
+
+                return true;
+            }
+        }
+    }
+
+    //TODO: Use getBet to check if bet exists instead of looping through all bets
+    function voteWinner(
+        string memory uuid,
+        WinnerVote winnerVote
+    ) public returns (bool sufficient) {
+        for (uint i = 0; i < bets.length; i++) {
+            if (
+                keccak256(abi.encodePacked(bets[i].uuid)) ==
+                keccak256(abi.encodePacked(uuid))
+            ) {
+                require(
+                    bets[i].status == Status.CHALLENGED,
+                    "Bet is not challenged"
+                );
+                require(
+                    msg.sender == bets[i].owner.punterAddress ||
+                        msg.sender == bets[i].challenger.punterAddress,
+                    "Only owner or challenger can vote"
+                );
+
+                if (msg.sender == bets[i].owner.punterAddress) {
+                    bets[i].owner.winnerVote = winnerVote;
+                } else {
+                    bets[i].challenger.winnerVote = winnerVote;
+                }
+
+                return true;
+            }
+        }
+    }
+
+    //TODO: Use getBet to check if bet exists instead of looping through all bets
+    function finalizeBet(string memory uuid) public returns (bool sufficient) {
+        for (uint i = 0; i < bets.length; i++) {
+            if (
+                keccak256(abi.encodePacked(bets[i].uuid)) ==
+                keccak256(abi.encodePacked(uuid))
+            ) {
+                require(
+                    bets[i].status == Status.CHALLENGED,
+                    "Bet is not challenged"
+                );
+                require(
+                    msg.sender == bets[i].owner.punterAddress ||
+                        msg.sender == bets[i].challenger.punterAddress,
+                    "Only owner or challenger can finish bet"
+                );
+                require(
+                    bets[i].owner.winnerVote != WinnerVote.UNDEFINED &&
+                        bets[i].challenger.winnerVote != WinnerVote.UNDEFINED,
+                    "Both owner and challenger must vote"
+                );
+                require(
+                    bets[i].owner.winnerVote == bets[i].challenger.winnerVote,
+                    "Owner and challenger must vote the same"
+                );
+
+                if (bets[i].owner.winnerVote == WinnerVote.OWNER) {
+                    bets[i].result = bets[i].owner.punterAddress;
+                } else {
+                    bets[i].result = bets[i].challenger.punterAddress;
+                }
+
+                bets[i].status = Status.FINISHED;
+
+                return true;
+            }
+        }
+    }
+
     /*
-
-    function challengeBet() {
-
-    }
-
-    function setDecision() {
-
-    }
-
     function auditBet() {
 
     } */
 
-    function generateUUID() private pure returns (string memory) {
-        return "1234567890";
+    function generateUUID() private view returns (string memory) {
+        bytes32 uuid = keccak256(
+            abi.encodePacked(block.timestamp, msg.sender, bets.length)
+        );
+        return toHexString(uuid);
+    }
+
+    function toHexString(bytes32 data) private pure returns (string memory) {
+        bytes memory alphabet = "0123456789abcdef";
+
+        bytes memory str = new bytes(64);
+        for (uint i = 0; i < 32; i++) {
+            str[i * 2] = alphabet[uint(uint8(data[i] >> 4))];
+            str[1 + i * 2] = alphabet[uint(uint8(data[i] & 0x0f))];
+        }
+        return string(str);
     }
 
     function stringLength(string memory str) private pure returns (uint) {
