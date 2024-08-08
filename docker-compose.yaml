@@ -11,7 +11,7 @@ services:
     ports: 
      - 8545:8545
     volumes:
-     - ./server:/server:cached
+     - ./server:/app:cached
 
   metacoin:
     build:
