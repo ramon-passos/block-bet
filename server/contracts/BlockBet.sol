@@ -32,7 +32,7 @@ contract BlockBet {
 
     struct OracleDecision {
         address orableAddress;
-        bool oracleDecision;
+        WinnerVote oracleDecision;
     }
 
     struct Bet {
@@ -42,7 +42,7 @@ contract BlockBet {
         address result;
         Punter owner;
         Punter challenger;
-        //OracleDecision[] oracles;
+        address[] oracles;
         Status status;
     }
 
@@ -52,6 +52,7 @@ contract BlockBet {
     Bet[] private finishedBets;
     Bet[] private contestedBets;
     mapping(address => uint) reputations;
+    mapping(address => OracleDecision) internal oracles;
     address public escrow;
 
     event Transfer(address indexed _from, address indexed _to, uint256 _value);
@@ -88,7 +89,7 @@ contract BlockBet {
             result: address(0),
             owner: owner,
             challenger: emptyChallenger,
-            // oracles: [],
+            oracles: new address[](0),
             status: Status.OPEN
         });
 
@@ -282,14 +283,65 @@ contract BlockBet {
         return true;
     }
 
-    /*
     // Function to allow the owner or challenger to contest the result of a bet
-    function contestBet () {}
+    function contestBet(string memory uuid) public returns (bool sufficient) {
+        (Bet memory bet, uint index) = findBet(uuid, finishedBets);
+        require(
+            keccak256(abi.encodePacked(bet.uuid)) ==
+                keccak256(abi.encodePacked(uuid)),
+            "Bet does not exist"
+        );
+        require(bet.status == Status.CHALLENGED, "Bet is not challenged");
+        require(
+            msg.sender == bet.owner.punterAddress ||
+                msg.sender == bet.challenger.punterAddress,
+            "Only owner or challenger can contest bet"
+        );
+        require(
+            bet.challenger.winnerVote != WinnerVote.UNDEFINED &&
+                bet.owner.winnerVote != WinnerVote.UNDEFINED,
+            "Both owner and challenger must vote"
+        );
+        require(
+            bet.challenger.winnerVote != bet.owner.winnerVote,
+            "Owner and challenger must vote differently"
+        );
+
+        bet.status = Status.CONTESTED;
+
+        removeElementArray(index, challengedBets);
+
+        contestedBets.push(bet);
+
+        return true;
+    }
 
     // Function to allow oracles to audit the bet
-    function auditBet() {
+    function auditBet(
+        string memory uuid,
+        WinnerVote winnerVote
+    ) public returns (bool sufficient) {
+        (Bet memory bet, ) = findBet(uuid, contestedBets);
+        require(
+            keccak256(abi.encodePacked(bet.uuid)) ==
+                keccak256(abi.encodePacked(uuid)),
+            "Bet does not exist"
+        );
+        require(bet.status == Status.CONTESTED, "Bet is not contested");
+        require(
+            oracles[msg.sender].oracleDecision != WinnerVote.UNDEFINED,
+            "Oracle must vote"
+        );
 
-    } */
+        OracleDecision memory oracleDecision = OracleDecision({
+            orableAddress: msg.sender,
+            oracleDecision: winnerVote
+        });
+
+        oracles[msg.sender] = oracleDecision;
+
+        return true;
+    }
 
     // TODO move this utility functions to a separate file
 
