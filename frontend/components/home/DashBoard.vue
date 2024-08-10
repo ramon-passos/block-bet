@@ -33,6 +33,8 @@
 </template>
 
 <script setup>
+import { BlockBetService } from '@/services/BlockBetService';
+const blockBetService = new BlockBetService();
 const bets = ref([]);
 const filters = ref({});
 
@@ -67,20 +69,7 @@ function removeFilter(key, value) {
 }
 
 function fetchData() {
-  let url = `http://localhost:8080/bets`;
-  const params = new URLSearchParams();
-
-  Object.keys(filters.value).forEach((key) => {
-    filters.value[key].forEach((value) => {
-      params.append(key, value);
-    });
-  });
-
-  if (params.toString()) {
-    url += `?${params.toString()}`;
-  }
-
-  fetch(url)
+  blockBetService.getBets(Object.entries(filters.value))
     .then((response) => response.json())
     .then((data) => {
       bets.value = data;
