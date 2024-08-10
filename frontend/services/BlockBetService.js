@@ -1,6 +1,10 @@
 export class BlockBetService {
+  constructor() {
+    this.baseUrl = 'http://localhost:8080';
+  }
+
   async getBets(filters) {
-    let url = `http://localhost:8080/bets`;
+    let url = `${this.baseUrl}/bets`;
     const params = new URLSearchParams();
 
     filters.forEach(([key, values]) => {
@@ -16,9 +20,14 @@ export class BlockBetService {
     return result;
   }
 
-  // async function createBet() {}
+  async getBet(id) {
+    const url = `${this.baseUrl}/bets/${id}`;
+    const result = await fetch(url);
 
-  //async function getBet() {}
+    return result;
+  }
+  
+  // async function createBet() {}
 
   // async function challengeBet() {}
 

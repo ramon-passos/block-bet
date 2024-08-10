@@ -3,14 +3,14 @@
     <section class="bet-info">
       <div class="col">
         <div class="row" id="bet-title">
-          <h1>Aposta #X</h1>
+          <h1>Aposta #{{ bet.id }}</h1>
         </div>
         <div class="row">
           <div class="col">
-            <p>info teste1</p>
+            <p>{{ bet.description }}</p>
           </div>
           <div class="col">
-            <p>info teste1</p>
+            <p>{{ bet.status }}</p>
           </div>
         </div>
         <div class="row" id="join-bet-row">
@@ -22,6 +22,34 @@
 </template>
 
 <script setup>
+import { BlockBetService } from '@/services/BlockBetService';
+
+const blockBetService = new BlockBetService();
+const bet = ref({});
+
+const props = defineProps({
+  id: {
+    type: Number,
+    required: true,
+  }
+});
+
+const { id } = props;
+
+onMounted(() => {
+  getBet();
+});
+
+
+function getBet(){
+  blockBetService.getBet(id)
+    .then(response => response.json())
+    .then(data => {
+      bet.value = data;
+    });
+}
+
+
 </script>
 
 <style scoped>
