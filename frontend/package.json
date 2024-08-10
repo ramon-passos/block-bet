@@ -2,10 +2,10 @@
   "private": true,
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "nuxt dev --host 0.0.0.0",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "start:mock": "json-server --watch fake-db.json --port 8080"
+    "start:mock": "json-server --watch fake-db.json --port 8080 --host 0.0.0.0"
   },
   "devDependencies": {
     "@instadapp/vue-web3-nuxt": "^0.9.8",
