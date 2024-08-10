@@ -19,12 +19,6 @@
           <Button buttonText="Criar minha aposta" buttonRoute="/bet/create">
           </Button>
         </div>
-        <div class="sub-header">
-          <div class="row">
-            <HomeFilter filterText="ABERTAS" />
-            <HomeFilter filterText="AUDITÁVEIS" />
-          </div>
-        </div>
         <HomeDashBoard />
       </section>
     </div>
@@ -45,6 +39,7 @@ body {
   display: grid;
   justify-content: center;
   padding: 0px 200px;
+  padding-bottom: 30px;
 }
 
 #main-sec {
@@ -55,7 +50,6 @@ body {
   font-size: 36px;
   font-weight: 400;
   padding-top: 50px;
-  z-index: 2;
   display: flex;
   justify-content: center;
 }
@@ -70,12 +64,6 @@ body {
 
 .main-section-header button {
   margin-left: auto;
-}
-
-.sub-header {
-  margin-top: 20px;
-  margin-left: 20px;
-  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .row {

@@ -4,7 +4,8 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "preview": "nuxt preview"
+    "preview": "nuxt preview",
+    "start:mock": "json-server --watch fake-db.json --port 8080"
   },
   "devDependencies": {
     "@instadapp/vue-web3-nuxt": "^0.9.8",
@@ -19,6 +20,7 @@
     "web3": "^1.8.1"
   },
   "dependencies": {
-    "@nuxtjs/google-fonts": "^3.2.0"
+    "@nuxtjs/google-fonts": "^3.2.0",
+    "json-server": "^1.0.0-beta.1"
   }
 }

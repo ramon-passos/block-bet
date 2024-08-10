@@ -1,0 +1,54 @@
+{
+  "bets": [
+    {
+      "id": 1,
+      "description": "Bet on Team A to win the championship",
+      "status": "open"
+    },
+    {
+      "id": 2,
+      "description": "Bet on Player X to score the first goal",
+      "status": "auditable"
+    },
+    {
+      "id": 3,
+      "description": "Bet on Team B to win by more than 3 points",
+      "status": "open"
+    },
+    {
+      "id": 4,
+      "description": "Bet on the match ending in a draw",
+      "status": "auditable"
+    },
+    {
+      "id": 5,
+      "description": "Bet on Player Y to be the top scorer",
+      "status": "open"
+    },
+    {
+      "id": 6,
+      "description": "Bet on Team C to concede first",
+      "status": "auditable"
+    },
+    {
+      "id": 7,
+      "description": "Bet on the match having over 2.5 goals",
+      "status": "open"
+    },
+    {
+      "id": 8,
+      "description": "Bet on Team D to win both halves",
+      "status": "auditable"
+    },
+    {
+      "id": 9,
+      "description": "Bet on Player Z to be sent off",
+      "status": "open"
+    },
+    {
+      "id": 10,
+      "description": "Bet on Team E to win the league",
+      "status": "auditable"
+    }
+  ]
+}
