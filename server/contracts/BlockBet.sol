@@ -194,7 +194,7 @@ contract BlockBet {
             winnerVote: WinnerVote.UNDEFINED
         });
 
-        moveBet(bet, index, Status.CHALLENGED);
+        moveBet(bet, index, Status.OPEN, Status.CHALLENGED);
 
         uint256 newBetIndex = challengedBets.length - 1;
 
@@ -252,7 +252,7 @@ contract BlockBet {
             "Owner and challenger must vote the same"
         );
 
-        moveBet(bet, index, Status.FINISHED);
+        moveBet(bet, index, Status.CHALLENGED, Status.FINISHED);
 
         uint256 newIndex = finishedBets.length - 1;
 
@@ -287,7 +287,7 @@ contract BlockBet {
             "Owner and challenger must vote differently"
         );
 
-        moveBet(bet, index, Status.CONTESTED);
+        moveBet(bet, index, Status.CHALLENGED, Status.CONTESTED);
 
         return true;
     }
@@ -324,58 +324,44 @@ contract BlockBet {
     function moveBet(
         Bet memory bet,
         uint index,
+        Status fromStatus,
         Status toStatus
     ) public returns (bool sufficient) {
-        if (toStatus == Status.CHALLENGED) {
-            challengedBets.push();
-            uint256 newIndex = challengedBets.length - 1;
-            challengedBets[newIndex].uuid = bet.uuid;
-            challengedBets[newIndex].timestamp = bet.timestamp;
-            challengedBets[newIndex].value = bet.value;
-            challengedBets[newIndex].description = bet.description;
-            challengedBets[newIndex].result = bet.result;
-            challengedBets[newIndex].owner = bet.owner;
-            challengedBets[newIndex].challenger = bet.challenger;
-            challengedBets[newIndex].status = Status.CHALLENGED;
-            removeElementArray(index, openBets);
-        } else if (toStatus == Status.FINISHED) {
-            finishedBets.push();
-            uint256 newIndex = finishedBets.length - 1;
-            finishedBets[newIndex].uuid = bet.uuid;
-            finishedBets[newIndex].timestamp = bet.timestamp;
-            finishedBets[newIndex].value = bet.value;
-            finishedBets[newIndex].description = bet.description;
-            finishedBets[newIndex].result = bet.result;
-            finishedBets[newIndex].owner = bet.owner;
-            finishedBets[newIndex].challenger = bet.challenger;
-            finishedBets[newIndex].status = Status.FINISHED;
-            removeElementArray(index, challengedBets);
-        } else if (toStatus == Status.CONTESTED) {
-            contestedBets.push();
-            uint256 newIndex = contestedBets.length - 1;
-            contestedBets[newIndex].uuid = bet.uuid;
-            contestedBets[newIndex].timestamp = bet.timestamp;
-            contestedBets[newIndex].value = bet.value;
-            contestedBets[newIndex].description = bet.description;
-            contestedBets[newIndex].result = bet.result;
-            contestedBets[newIndex].owner = bet.owner;
-            contestedBets[newIndex].challenger = bet.challenger;
-            contestedBets[newIndex].status = Status.CONTESTED;
-            removeElementArray(index, challengedBets);
-        } else if (toStatus == Status.INVALID) {
-            invalidBets.push();
-            uint256 newIndex = invalidBets.length - 1;
-            invalidBets[newIndex].uuid = bet.uuid;
-            invalidBets[newIndex].timestamp = bet.timestamp;
-            invalidBets[newIndex].value = bet.value;
-            invalidBets[newIndex].description = bet.description;
-            invalidBets[newIndex].result = bet.result;
-            invalidBets[newIndex].owner = bet.owner;
-            invalidBets[newIndex].status = Status.INVALID;
-            removeElementArray(index, challengedBets);
+        Bet[] storage fromArray;
+        Bet[] storage toArray;
+        if (fromStatus == Status.OPEN) {
+            fromArray = openBets;
+        } else if (fromStatus == Status.CHALLENGED) {
+            fromArray = challengedBets;
+        } else if (fromStatus == Status.FINISHED) {
+            fromArray = finishedBets;
+        } else if (fromStatus == Status.CONTESTED) {
+            fromArray = contestedBets;
         } else {
-            revert("Invalid status");
+            revert("Invalid from status");
         }
+
+        if (toStatus == Status.CHALLENGED) {
+            toArray = challengedBets;
+        } else if (toStatus == Status.FINISHED) {
+            toArray = finishedBets;
+        } else if (toStatus == Status.CONTESTED) {
+            toArray = contestedBets;
+        } else {
+            revert("Invalid to status");
+        }
+
+        toArray.push();
+        uint256 newIndex = toArray.length - 1;
+        toArray[newIndex].uuid = bet.uuid;
+        toArray[newIndex].timestamp = bet.timestamp;
+        toArray[newIndex].value = bet.value;
+        toArray[newIndex].description = bet.description;
+        toArray[newIndex].result = bet.result;
+        toArray[newIndex].owner = bet.owner;
+        toArray[newIndex].challenger = bet.challenger;
+        toArray[newIndex].status = toStatus;
+        removeElementArray(index, fromArray);
         return true;
     }
 
