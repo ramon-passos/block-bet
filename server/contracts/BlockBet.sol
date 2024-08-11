@@ -195,16 +195,14 @@ contract BlockBet {
 
         moveBet(bet, index, Status.OPEN, Status.CHALLENGED);
 
-        uint256 newIndex = challengedBets.length - 1;
+        uint256 newBetIndex = challengedBets.length - 1;
 
-        challengedBets[newIndex].challenger = challenger;
+        challengedBets[newBetIndex].challenger = challenger;
 
         emit Transfer(msg.sender, escrow, bet.value);
 
         return true;
     }
-
-    event Log(string message, uint value);
 
     function voteWinner(
         string memory uuid,
@@ -293,32 +291,32 @@ contract BlockBet {
         return true;
     }
 
-    // // Function to allow oracles to audit the bet
-    // // function auditBet(
-    // //     string memory uuid,
-    // //     WinnerVote winnerVote
-    // // ) public returns (bool sufficient) {
-    // //     (Bet memory bet, ) = findBet(uuid, contestedBets);
-    // //     require(
-    // //         keccak256(abi.encodePacked(bet.uuid)) ==
-    // //             keccak256(abi.encodePacked(uuid)),
-    // //         "Bet does not exist"
-    // //     );
-    // //     require(bet.status == Status.CONTESTED, "Bet is not contested");
-    // //     require(
-    // //         oracles[msg.sender].oracleDecision != WinnerVote.UNDEFINED,
-    // //         "Oracle must vote"
-    // //     );
+    // Function to allow oracles to audit the bet
+    // function auditBet(
+    //     string memory uuid,
+    //     WinnerVote winnerVote
+    // ) public returns (bool sufficient) {
+    //     (Bet memory bet, ) = findBet(uuid, contestedBets);
+    //     require(
+    //         keccak256(abi.encodePacked(bet.uuid)) ==
+    //             keccak256(abi.encodePacked(uuid)),
+    //         "Bet does not exist"
+    //     );
+    //     require(bet.status == Status.CONTESTED, "Bet is not contested");
+    //     require(
+    //         oracles[msg.sender].oracleDecision != WinnerVote.UNDEFINED,
+    //         "Oracle must vote"
+    //     );
 
-    // //     OracleDecision memory oracleDecision = OracleDecision({
-    // //         orableAddress: msg.sender,
-    // //         oracleDecision: winnerVote
-    // //     });
+    //     OracleDecision memory oracleDecision = OracleDecision({
+    //         orableAddress: msg.sender,
+    //         oracleDecision: winnerVote
+    //     });
 
-    // //     oracles[msg.sender] = oracleDecision;
+    //     oracles[msg.sender] = oracleDecision;
 
-    // //     return true;
-    // // }
+    //     return true;
+    // }
 
     // TODO move this utility functions to a separate file
 
