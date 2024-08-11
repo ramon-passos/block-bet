@@ -21,7 +21,7 @@ export class BlockBetService {
   }
 
   async getBet(id) {
-    const url = `${this.baseUrl}/bets/${id}`;
+    const url = `${this.baseUrl}/bets?id=${id}`;
     const result = await fetch(url);
 
     return result;
