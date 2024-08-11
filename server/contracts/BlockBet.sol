@@ -57,6 +57,8 @@ contract BlockBet {
 
     event Transfer(address indexed _from, address indexed _to, uint256 _value);
 
+    event BetCreated(string uuid);
+
     constructor() {
         escrow = address(this);
     }
@@ -85,6 +87,9 @@ contract BlockBet {
         openBets[newIndex].result = address(0);
         openBets[newIndex].owner = owner;
         openBets[newIndex].status = Status.OPEN;
+
+        emit BetCreated(openBets[newIndex].uuid);
+
         return true;
     }
 
