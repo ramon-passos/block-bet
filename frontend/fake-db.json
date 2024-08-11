@@ -2,53 +2,163 @@
   "bets": [
     {
       "id": 1,
+      "uuid": "a1b2c3d4-e5f6-7g8h-9i10-j11k12l13m14",
+      "value": 100.0,
       "description": "Bet on Team A to win the championship",
-      "status": "open"
+      "result": "pending",
+      "owner": {
+        "name": "User1",
+        "id": 101
+      },
+      "challenger": {
+        "name": "User2",
+        "id": 102
+      },
+      "status": "invalid"
     },
     {
       "id": 2,
+      "uuid": "n15o16p17-q18r19s20-t21u22v23w24",
+      "value": 150.0,
       "description": "Bet on Player X to score the first goal",
-      "status": "auditable"
+      "result": "pending",
+      "owner": {
+        "name": "User3",
+        "id": 103
+      },
+      "challenger": {
+        "name": "User4",
+        "id": 104
+      },
+      "status": "challenged"
     },
     {
       "id": 3,
+      "uuid": "x25y26z27-a28b29c30-d31e32f33g34",
+      "value": 200.0,
       "description": "Bet on Team B to win by more than 3 points",
-      "status": "open"
+      "result": "pending",
+      "owner": {
+        "name": "User5",
+        "id": 105
+      },
+      "challenger": {
+        "name": "User6",
+        "id": 106
+      },
+      "status": "contested"
     },
     {
       "id": 4,
+      "uuid": "h35i36j37-k38l39m40-n41o42p43q44",
+      "value": 120.0,
       "description": "Bet on the match ending in a draw",
-      "status": "auditable"
+      "result": "pending",
+      "owner": {
+        "name": "User7",
+        "id": 107
+      },
+      "challenger": {
+        "name": "User8",
+        "id": 108
+      },
+      "status": "finished"
     },
     {
       "id": 5,
+      "uuid": "r45s46t47-u48v49w50-x51y52z53a54",
+      "value": 250.0,
       "description": "Bet on Player Y to be the top scorer",
+      "result": "pending",
+      "owner": {
+        "name": "User9",
+        "id": 109
+      },
+      "challenger": {
+        "name": "User10",
+        "id": 110
+      },
       "status": "open"
     },
     {
       "id": 6,
+      "uuid": "b55c56d57-e58f59g60-h61i62j63k64",
+      "value": 300.0,
       "description": "Bet on Team C to concede first",
-      "status": "auditable"
+      "result": "pending",
+      "owner": {
+        "name": "User11",
+        "id": 111
+      },
+      "challenger": {
+        "name": "User12",
+        "id": 112
+      },
+      "status": "invalid"
     },
     {
       "id": 7,
+      "uuid": "l65m66n67-o68p69q70-r71s72t73u74",
+      "value": 180.0,
       "description": "Bet on the match having over 2.5 goals",
-      "status": "open"
+      "result": "pending",
+      "owner": {
+        "name": "User13",
+        "id": 113
+      },
+      "challenger": {
+        "name": "User14",
+        "id": 114
+      },
+      "status": "contested"
     },
     {
       "id": 8,
+      "uuid": "v75w76x77-y78z79a80-b81c82d83e84",
+      "value": 220.0,
       "description": "Bet on Team D to win both halves",
-      "status": "auditable"
+      "result": "pending",
+      "owner": {
+        "name": "User15",
+        "id": 115
+      },
+      "challenger": {
+        "name": "User16",
+        "id": 116
+      },
+      "status": "finished"
     },
     {
       "id": 9,
+      "uuid": "f85g86h87-i88j89k90-l91m92n93o94",
+      "value": 140.0,
       "description": "Bet on Player Z to be sent off",
+      "result": "pending",
+      "owner": {
+        "name": "User17",
+        "id": 117
+      },
+      "challenger": {
+        "name": "User18",
+        "id": 118
+      },
       "status": "open"
     },
     {
       "id": 10,
+      "uuid": "p95q96r97-s98t99u100-v101w102x103",
+      "value": 160.0,
       "description": "Bet on Team E to win the league",
-      "status": "auditable"
+      "result": "pending",
+      "owner": {
+        "name": "User19",
+        "id": 119
+      },
+      "challenger": {
+        "name": "User20",
+        "id": 120
+      },
+      "status": "challenged"
     }
   ]
 }
