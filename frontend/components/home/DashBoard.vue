@@ -11,9 +11,30 @@
       <HomeFilter
         @filter-selected="handleFilter"
         @filter-unselected="removeFilter"
-        filterText="AUDITÁVEIS"
+        filterText="DESAFIADAS"
         filterType="status"
-        filter="auditable"
+        filter="challenged"
+      />
+      <HomeFilter
+        @filter-selected="handleFilter"
+        @filter-unselected="removeFilter"
+        filterText="CONTESTADAS"
+        filterType="status"
+        filter="contested"
+      />
+      <HomeFilter
+        @filter-selected="handleFilter"
+        @filter-unselected="removeFilter"
+        filterText="FINALIZADAS"
+        filterType="status"
+        filter="finished"
+      />
+      <HomeFilter
+        @filter-selected="handleFilter"
+        @filter-unselected="removeFilter"
+        filterText="INVÁLIDAS"
+        filterType="status"
+        filter="invalid"
       />
     </div>
   </div>
@@ -30,6 +51,7 @@
 
 <script setup>
 import { BlockBetService } from "@/services/BlockBetService";
+
 const blockBetService = new BlockBetService();
 const bets = ref([]);
 const filters = ref({});

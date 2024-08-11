@@ -19,7 +19,7 @@
         </div>
         <div class="col data-field" id="status-col">
           <p>
-            {{ betData.status }}
+            {{ StatusEnum[betData.status] }}
           </p>
         </div>
       </div>
@@ -29,6 +29,8 @@
 </template>
 
 <script setup>
+import { StatusEnum } from "@/constants/statusEnum";
+
 const router = useRouter();
 
 const props = defineProps({
