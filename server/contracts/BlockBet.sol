@@ -30,7 +30,7 @@ struct Punter {
 }
 
 struct OracleDecision {
-    address orableAddress;
+    address oracleAddress;
     WinnerVote oracleDecision;
 }
 
@@ -208,8 +208,8 @@ contract BlockBet {
     function voteWinner(
         string memory uuid,
         WinnerVote winnerVote
-    ) public view returns (bool sufficient) {
-        (Bet memory bet, ) = findBet(uuid, challengedBets);
+    ) public returns (Bet memory betReturn) {
+        (Bet memory bet, uint index) = findBet(uuid, challengedBets);
         require(
             keccak256(abi.encodePacked(bet.uuid)) ==
                 keccak256(abi.encodePacked(uuid)),
@@ -222,11 +222,11 @@ contract BlockBet {
             "Only owner or challenger can vote"
         );
         if (msg.sender == bet.owner.punterAddress) {
-            bet.owner.winnerVote = winnerVote;
+            challengedBets[index].owner.winnerVote = winnerVote;
         } else {
-            bet.challenger.winnerVote = winnerVote;
+            challengedBets[index].challenger.winnerVote = winnerVote;
         }
-        return true;
+        return bet;
     }
 
     function finalizeBet(string memory uuid) public returns (bool sufficient) {
@@ -310,7 +310,7 @@ contract BlockBet {
     //     );
 
     //     OracleDecision memory oracleDecision = OracleDecision({
-    //         orableAddress: msg.sender,
+    //         oracleAddress: msg.sender,
     //         oracleDecision: winnerVote
     //     });
 
