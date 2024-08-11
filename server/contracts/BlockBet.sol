@@ -235,6 +235,7 @@ contract BlockBet {
     }
 
     function finalizeBet(string memory uuid) public returns (bool sufficient) {
+        // TODO finalize contested bet too
         (Bet memory bet, uint index) = findBet(uuid, challengedBets);
         require(
             keccak256(abi.encodePacked(bet.uuid)) ==
@@ -272,7 +273,7 @@ contract BlockBet {
     }
 
     function contestBet(string memory uuid) public returns (bool sufficient) {
-        (Bet memory bet, uint index) = findBet(uuid, finishedBets);
+        (Bet memory bet, uint index) = findBet(uuid, challengedBets);
         require(
             keccak256(abi.encodePacked(bet.uuid)) ==
                 keccak256(abi.encodePacked(uuid)),
@@ -299,32 +300,41 @@ contract BlockBet {
         return true;
     }
 
-    // Function to allow oracles to audit the bet
-    // function auditBet(
-    //     string memory uuid,
-    //     WinnerVote winnerVote
-    // ) public returns (bool sufficient) {
-    //     (Bet memory bet, ) = findBet(uuid, contestedBets);
-    //     require(
-    //         keccak256(abi.encodePacked(bet.uuid)) ==
-    //             keccak256(abi.encodePacked(uuid)),
-    //         "Bet does not exist"
-    //     );
-    //     require(bet.status == Status.CONTESTED, "Bet is not contested");
-    //     require(
-    //         oracles[msg.sender].oracleDecision != WinnerVote.UNDEFINED,
-    //         "Oracle must vote"
-    //     );
+    function auditBet(
+        string memory uuid,
+        WinnerVote winnerVote
+    ) public returns (bool sufficient) {
+        (Bet memory bet, uint index) = findBet(uuid, contestedBets);
+        require(
+            keccak256(abi.encodePacked(bet.uuid)) ==
+                keccak256(abi.encodePacked(uuid)),
+            "Bet does not exist"
+        );
+        require(bet.status == Status.CONTESTED, "Bet is not contested");
+        require(
+            msg.sender != bet.owner.punterAddress &&
+                msg.sender != bet.challenger.punterAddress,
+            "Only oracles can audit bet"
+        );
+        require(
+            winnerVote != WinnerVote.UNDEFINED,
+            "Winner vote must be defined"
+        );
 
-    //     OracleDecision memory oracleDecision = OracleDecision({
-    //         oracleAddress: msg.sender,
-    //         oracleDecision: winnerVote
-    //     });
+        OracleDecision memory oracleDecision = OracleDecision({
+            oracleAddress: msg.sender,
+            oracleDecision: winnerVote
+        });
 
-    //     oracles[msg.sender] = oracleDecision;
+        for (uint i = 0; i < bet.oracles.length; i++) {
+            if (bet.oracles[i].oracleAddress == address(0)) {
+                contestedBets[index].oracles[i] = oracleDecision;
+                break;
+            }
+        }
 
-    //     return true;
-    // }
+        return true;
+    }
 
     // TODO function to return bets for a specific user
 

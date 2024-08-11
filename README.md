@@ -62,3 +62,11 @@ Para finalizar uma aposta, chame a função `finalizeBet`:
 ```
 instance.finalizeBet('uuid')
 ```
+Para contestar uma aposta, chame a função `contestBet`:
+```
+instance.contestBet('uuid', {from: accounts[1]})
+```
+Para auditar uma aposta, chame a função `auditBet`:
+```
+instance.auditBet('uuid', 2, {from: accounts[1]})
+```
