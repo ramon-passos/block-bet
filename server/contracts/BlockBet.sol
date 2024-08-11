@@ -51,6 +51,7 @@ contract BlockBet {
     Bet[] private challengedBets;
     Bet[] private finishedBets;
     Bet[] private contestedBets;
+    Bet[] private invalidBets;
     mapping(address => uint) reputations;
     address public escrow;
 
@@ -193,7 +194,7 @@ contract BlockBet {
             winnerVote: WinnerVote.UNDEFINED
         });
 
-        moveBet(bet, index, Status.OPEN, Status.CHALLENGED);
+        moveBet(bet, index, Status.CHALLENGED);
 
         uint256 newBetIndex = challengedBets.length - 1;
 
@@ -251,7 +252,7 @@ contract BlockBet {
             "Owner and challenger must vote the same"
         );
 
-        moveBet(bet, index, Status.CHALLENGED, Status.FINISHED);
+        moveBet(bet, index, Status.FINISHED);
 
         uint256 newIndex = finishedBets.length - 1;
 
@@ -286,7 +287,7 @@ contract BlockBet {
             "Owner and challenger must vote differently"
         );
 
-        moveBet(bet, index, Status.FINISHED, Status.CONTESTED);
+        moveBet(bet, index, Status.CONTESTED);
 
         return true;
     }
@@ -323,12 +324,11 @@ contract BlockBet {
     function moveBet(
         Bet memory bet,
         uint index,
-        Status fromStatus,
         Status toStatus
     ) public returns (bool sufficient) {
         if (toStatus == Status.CHALLENGED) {
             challengedBets.push();
-            uint256 newIndex = openBets.length - 1;
+            uint256 newIndex = challengedBets.length - 1;
             challengedBets[newIndex].uuid = bet.uuid;
             challengedBets[newIndex].timestamp = bet.timestamp;
             challengedBets[newIndex].value = bet.value;
@@ -340,7 +340,7 @@ contract BlockBet {
             removeElementArray(index, openBets);
         } else if (toStatus == Status.FINISHED) {
             finishedBets.push();
-            uint256 newIndex = challengedBets.length - 1;
+            uint256 newIndex = finishedBets.length - 1;
             finishedBets[newIndex].uuid = bet.uuid;
             finishedBets[newIndex].timestamp = bet.timestamp;
             finishedBets[newIndex].value = bet.value;
@@ -352,7 +352,7 @@ contract BlockBet {
             removeElementArray(index, challengedBets);
         } else if (toStatus == Status.CONTESTED) {
             contestedBets.push();
-            uint256 newIndex = challengedBets.length - 1;
+            uint256 newIndex = contestedBets.length - 1;
             contestedBets[newIndex].uuid = bet.uuid;
             contestedBets[newIndex].timestamp = bet.timestamp;
             contestedBets[newIndex].value = bet.value;
@@ -361,6 +361,17 @@ contract BlockBet {
             contestedBets[newIndex].owner = bet.owner;
             contestedBets[newIndex].challenger = bet.challenger;
             contestedBets[newIndex].status = Status.CONTESTED;
+            removeElementArray(index, challengedBets);
+        } else if (toStatus == Status.INVALID) {
+            invalidBets.push();
+            uint256 newIndex = invalidBets.length - 1;
+            invalidBets[newIndex].uuid = bet.uuid;
+            invalidBets[newIndex].timestamp = bet.timestamp;
+            invalidBets[newIndex].value = bet.value;
+            invalidBets[newIndex].description = bet.description;
+            invalidBets[newIndex].result = bet.result;
+            invalidBets[newIndex].owner = bet.owner;
+            invalidBets[newIndex].status = Status.INVALID;
             removeElementArray(index, challengedBets);
         } else {
             revert("Invalid status");
