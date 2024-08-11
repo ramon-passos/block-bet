@@ -1,5 +1,5 @@
 <template>
-  <section class="bet" @click="showBet(bet_data.id)">
+  <section class="bet" @click="showBet(betData.id)">
     <div class="col">
       <div class="row bet-title">
         <p>
@@ -9,17 +9,17 @@
       <div class="row bet-data">
         <div class="col data-field" id="id-col">
           <p>
-            {{ bet_data.id }}
+            {{ betData.id }}
           </p>
         </div>
         <div class="col data-field" id="desc-col">
           <p>
-            {{ bet_data.description }}
+            {{ betData.description }}
           </p>
         </div>
         <div class="col data-field" id="status-col">
           <p>
-            {{ bet_data.status }}
+            {{ betData.status }}
           </p>
         </div>
       </div>
@@ -32,7 +32,7 @@
 const router = useRouter();
 
 const props = defineProps({
-  bet_data: {
+  betData: {
     type: Object,
     required: true,
   }

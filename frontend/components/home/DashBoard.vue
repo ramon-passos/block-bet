@@ -20,20 +20,16 @@
   <section class="dashboard-panel">
     <ul>
       <li v-for="bet in bets" :key="bet.id">
-        <HomeDashBoardItem :bet_data="bet">
-        </HomeDashBoardItem>
+        <HomeDashBoardItem :betData="bet"> </HomeDashBoardItem>
       </li>
     </ul>
-    <HomePagination
-      onClick="onClickHandler"
-      :numPages=totalPages
-    >
+    <HomePagination onClick="onClickHandler" :numPages="totalPages">
     </HomePagination>
   </section>
 </template>
 
 <script setup>
-import { BlockBetService } from '@/services/BlockBetService';
+import { BlockBetService } from "@/services/BlockBetService";
 const blockBetService = new BlockBetService();
 const bets = ref([]);
 const filters = ref({});
@@ -51,7 +47,6 @@ function handleFilter(key, value) {
   if (!filters.value[key].includes(value)) {
     filters.value[key].push(value);
   }
-  fetchData();
 }
 
 function removeFilter(key, value) {
@@ -64,20 +59,20 @@ function removeFilter(key, value) {
       delete filters.value[key];
     }
   }
-
-  fetchData();
 }
 
 function fetchData() {
-  blockBetService.getBets(Object.entries(filters.value))
+  blockBetService
+    .getBets(Object.entries(filters.value))
     .then((response) => response.json())
     .then((data) => {
       bets.value = data;
-      totalPages.value = data.length + 1/ itemsPerPage.value;
+      totalPages.value = data.length + 1 / itemsPerPage.value;
     });
 
   console.log(totalPages.value);
 }
+
 function onClickHanlder(page) {
   currentPage.value = page;
   scrollToTop();
@@ -85,18 +80,23 @@ function onClickHanlder(page) {
 
 function dataPerPage() {
   for (bet in bets) {
-
   }
 }
 
 const scrollToTop = () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({ top: 0, behavior: "smooth" });
 };
 
 onMounted(() => {
   scrollToTop();
   fetchData();
 });
+
+watch(filters, () => {
+    fetchData();
+  },
+  { deep: true }
+);
 </script>
 
 <style scoped>

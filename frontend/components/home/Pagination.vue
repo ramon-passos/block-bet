@@ -41,6 +41,7 @@ const props = defineProps({
 
 .number:hover {
   background-color: rgb(233, 240, 238);
+  cursor: pointer;
 }
 
 .number p {
