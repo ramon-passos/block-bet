@@ -261,6 +261,8 @@ contract BlockBet {
         } else {
             challengedBets[newIndex].result = bet.challenger.punterAddress;
         }
+
+        // TODO transfer money to winner
         return true;
     }
 
@@ -319,7 +321,17 @@ contract BlockBet {
     //     return true;
     // }
 
+    // TODO function to return bets for a specific user
+
+    // TODO function to cancel a open bet
+
+    // TODO function to invalid a bet
+
     // TODO move this utility functions to a separate file
+
+    // TODO transfer money in functions that require it
+
+    // TODO consider tax in emit Transfer
 
     function moveBet(
         Bet memory bet,
