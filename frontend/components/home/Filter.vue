@@ -22,34 +22,21 @@ const props = defineProps({
     type: String,
     required: true,
   },
-});
+})
 
-let isActive = false;
+const emit = defineEmits(["filterSelected", "filterUnselected"])
 
-const emit = defineEmits(["filter-selected", "filter-unselected"]);
-const { filter, filterType } = props;
+const isActive = ref(false)
+
+const backgroundColor = computed(() => isActive.value ? "rgb(226, 14, 208)" : "white")
+const color = computed(() => isActive.value ? "white" : "rgb(226, 14, 208)")
 
 function applyFilter() {
-  changeColor();
-  if (isActive) {
-    emit("filter-selected", filterType, filter);
+  isActive.value = !isActive.value
+  if (isActive.value) {
+    emit("filterSelected", props.filterType, props.filter)
   } else {
-    emit("filter-unselected", filterType, filter);
-  }
-}
-
-const backgroundColor = ref("white");
-const color = ref("rgb(226, 14, 208)");
-
-function changeColor() {
-  isActive = !isActive;
-
-  if (isActive) {
-    backgroundColor.value = "rgb(226, 14, 208)";
-    color.value = "white";
-  } else {
-    backgroundColor.value = "white";
-    color.value = "rgb(226, 14, 208)";
+    emit("filterUnselected", props.filterType, props.filter)
   }
 }
 </script>

@@ -1,50 +1,45 @@
 <template>
   <div class="pagination">
-    <div class="row" v-for="page in numPages" :key="page">
-      <div class="number">
-        <p>{{ page }}</p>
-      </div>
+    <div class="row" v-for="page in totalPages" :key="page">
+      <HomeSinglePage
+        :page="page"
+        :currentPage="activePage"
+        @changeCurrentPage="pageHandler"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
 const props = defineProps({
-  numPages: {
+  totalPages: {
     type: Number,
     required: true,
   },
 });
+
+const emit = defineEmits(["sendActivePage"])
+
+const activePage = ref(1);
+
+function pageHandler(page) {
+  activePage.value = page;
+  emit("sendActivePage", activePage.value)
+}
 </script>
 
 <style scoped>
 .pagination {
-  color: blueviolet;
+  color: rgb(31, 150, 255);
   display: flex;
   justify-content: center;
   margin-top: 30px;
   font-size: 20px;
+  gap: 20px;
 }
 
-.number {
-  margin-right: 18px;
-  font-weight: 500;
-  width: 40px;
-  height: 40px;
+.row {
   display: flex;
   justify-content: center;
-  align-content: center;
-  border: 1px solid blueviolet;
-  border-radius: 50%;
-  transition: background-color 0.3s ease;
-}
-
-.number:hover {
-  background-color: rgb(233, 240, 238);
-  cursor: pointer;
-}
-
-.number p {
-  align-self: center;
 }
 </style>

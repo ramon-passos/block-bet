@@ -106,8 +106,7 @@ function betIsOpen(status) {
 }
 
 #status-col {
-  display: flex;
-  justify-content: end;
+  display: flex-end;
   justify-self: end;
   font-weight: bold;
   font-size: 20px;

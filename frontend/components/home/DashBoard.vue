@@ -2,36 +2,36 @@
   <div class="sub-header">
     <div class="row">
       <HomeFilter
-        @filter-selected="handleFilter"
-        @filter-unselected="removeFilter"
+        @filterSelected="handleFilter"
+        @filterUnselected="removeFilter"
         filterText="ABERTAS"
         filterType="status"
         filter="open"
       />
       <HomeFilter
-        @filter-selected="handleFilter"
-        @filter-unselected="removeFilter"
+        @filterSelected="handleFilter"
+        @filterUnselected="removeFilter"
         filterText="DESAFIADAS"
         filterType="status"
         filter="challenged"
       />
       <HomeFilter
-        @filter-selected="handleFilter"
-        @filter-unselected="removeFilter"
+        @filterSelected="handleFilter"
+        @filterUnselected="removeFilter"
         filterText="CONTESTADAS"
         filterType="status"
         filter="contested"
       />
       <HomeFilter
-        @filter-selected="handleFilter"
-        @filter-unselected="removeFilter"
+        @filterSelected="handleFilter"
+        @filterUnselected="removeFilter"
         filterText="FINALIZADAS"
         filterType="status"
         filter="finished"
       />
       <HomeFilter
-        @filter-selected="handleFilter"
-        @filter-unselected="removeFilter"
+        @filterSelected="handleFilter"
+        @filterUnselected="removeFilter"
         filterText="INVÁLIDAS"
         filterType="status"
         filter="invalid"
@@ -40,11 +40,18 @@
   </div>
   <section class="dashboard-panel">
     <ul>
-      <li v-for="bet in bets" :key="bet.id">
+      <li v-for="bet in betsPerPage" :key="bet.id">
         <HomeDashBoardItem :betData="bet"> </HomeDashBoardItem>
       </li>
     </ul>
-    <HomePagination onClick="onClickHandler" :numPages="totalPages">
+    <div v-show="betsPerPage.length == 0">
+      <Loader />
+    </div>
+    <HomePagination
+      :totalPages="totalPages"
+      :currentPage="currentPage"
+      @sendActivePage="handlePageData"
+    >
     </HomePagination>
   </section>
 </template>
@@ -55,11 +62,12 @@ import { BlockBetService } from "@/services/BlockBetService";
 const blockBetService = new BlockBetService();
 const bets = ref([]);
 const filters = ref({});
-
 const currentPage = ref(1);
-const itemsPerPage = ref(5);
-const pageData = ref([]);
-const totalPages = ref(1);
+const itemsPerPage = 5;
+const betsPerPage = ref([]);
+const totalPages = computed(() => Math.ceil(bets.value.length / itemsPerPage));
+
+const calculateOffset = (page) => (page - 1) * itemsPerPage;
 
 function handleFilter(key, value) {
   if (!filters.value[key]) {
@@ -83,26 +91,22 @@ function removeFilter(key, value) {
   }
 }
 
-function fetchData() {
-  blockBetService
-    .getBets(Object.entries(filters.value))
-    .then((response) => response.json())
-    .then((data) => {
-      bets.value = data;
-      totalPages.value = data.length + 1 / itemsPerPage.value;
-    });
-
-  console.log(totalPages.value);
+async function fetchData() {
+  const response = await blockBetService.getBets(Object.entries(filters.value));
+  const data = await response.json();
+  bets.value = data;
+  setDataPerPage();
 }
 
-function onClickHanlder(page) {
+function setDataPerPage() {
+  const offset = calculateOffset(currentPage.value);
+  betsPerPage.value = bets.value.slice(offset, offset + itemsPerPage);
+}
+
+function handlePageData(page) {
   currentPage.value = page;
   scrollToTop();
-}
-
-function dataPerPage() {
-  for (bet in bets) {
-  }
+  setDataPerPage();
 }
 
 const scrollToTop = () => {
@@ -110,14 +114,23 @@ const scrollToTop = () => {
 };
 
 onMounted(() => {
-  scrollToTop();
   fetchData();
 });
 
-watch(filters, () => {
+watch(
+  filters,
+  () => {
+    currentPage.value = 1;
     fetchData();
   },
   { deep: true }
+);
+
+watch(
+  currentPage,
+  () => {
+    setDataPerPage();
+  }
 );
 </script>
 
