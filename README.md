@@ -60,7 +60,7 @@ instance.voteWinner('uuid', 1, {from: accounts[0]})
 ```
 Para finalizar uma aposta, chame a função `finalizeBet`:
 ```
-instance.finalizeBet('uuid')
+instance.finalizeBet('uuid', 1)
 ```
 Para contestar uma aposta, chame a função `contestBet`:
 ```
@@ -68,5 +68,5 @@ instance.contestBet('uuid', {from: accounts[1]})
 ```
 Para auditar uma aposta, chame a função `auditBet`:
 ```
-instance.auditBet('uuid', 2, {from: accounts[1]})
+instance.auditBet('uuid', 2, {from: accounts[3]})
 ```

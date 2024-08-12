@@ -12,7 +12,8 @@ enum Decision {
 enum WinnerVote {
     UNDEFINED,
     OWNER,
-    CHALLENGER
+    CHALLENGER,
+    INVALID
 }
 
 enum Status {
@@ -34,13 +35,15 @@ struct OracleDecision {
     WinnerVote oracleDecision;
 }
 
+uint constant MAX_ORACLES = 1;
+
 struct Bet {
     string uuid;
     uint256 timestamp;
     uint value;
     string description;
     address result;
-    OracleDecision[4] oracles;
+    OracleDecision[MAX_ORACLES] oracles;
     Punter owner;
     Punter challenger;
     Status status;
@@ -92,6 +95,266 @@ contract BlockBet {
 
         return true;
     }
+
+    // function invalidBet(string memory uuid) public returns (bool sufficient) {
+    //     (Bet memory bet, uint index) = findBet(uuid, openBets);
+    //     require(
+    //         keccak256(abi.encodePacked(bet.uuid)) ==
+    //             keccak256(abi.encodePacked(uuid)),
+    //         "Bet does not exist"
+    //     );
+    //     require(
+    //         bet.status == Status.OPEN || bet.status == Status.CONTESTED,
+    //         "Bet is not open or contested"
+    //     );
+    //     require(
+    //         msg.sender == bet.owner.punterAddress ||
+
+    //     moveBet(bet, index, Status.OPEN, Status.INVALID);
+
+    //     return true;
+    // }
+
+    function challengeBet(
+        string memory uuid,
+        Decision challengerDecision
+    ) public returns (bool sufficient) {
+        (Bet memory bet, uint index) = findBet(uuid, openBets);
+        require(
+            keccak256(abi.encodePacked(bet.uuid)) ==
+                keccak256(abi.encodePacked(uuid)),
+            "Bet does not exist"
+        );
+        require(bet.status == Status.OPEN, "Bet is not open for challenge");
+        require(
+            msg.sender != bet.owner.punterAddress,
+            "Owner cannot challenge own bet"
+        );
+        require(msg.sender.balance >= bet.value, "Insufficient balance");
+        require(
+            challengerDecision != Decision.UNDEFINED,
+            "Decision must be defined"
+        );
+        require(
+            bet.owner.decision != Decision.UNDEFINED,
+            "Owner decision must be defined"
+        );
+        require(
+            bet.owner.decision != challengerDecision,
+            "Challenger decision must be different from owner"
+        );
+
+        Punter memory challenger = Punter({
+            punterAddress: msg.sender,
+            decision: challengerDecision,
+            winnerVote: WinnerVote.UNDEFINED
+        });
+
+        moveBet(bet, index, Status.OPEN, Status.CHALLENGED);
+
+        uint256 newBetIndex = challengedBets.length - 1;
+
+        challengedBets[newBetIndex].challenger = challenger;
+
+        emit Transfer(msg.sender, escrow, bet.value);
+
+        return true;
+    }
+
+    function voteWinner(
+        string memory uuid,
+        WinnerVote winnerVote
+    ) public returns (Bet memory betReturn) {
+        (Bet memory bet, uint index) = findBet(uuid, challengedBets);
+        require(
+            keccak256(abi.encodePacked(bet.uuid)) ==
+                keccak256(abi.encodePacked(uuid)),
+            "Bet does not exist"
+        );
+        require(bet.status == Status.CHALLENGED, "Bet is not challenged");
+        require(
+            msg.sender == bet.owner.punterAddress ||
+                msg.sender == bet.challenger.punterAddress,
+            "Only owner or challenger can vote"
+        );
+        if (msg.sender == bet.owner.punterAddress) {
+            challengedBets[index].owner.winnerVote = winnerVote;
+        } else {
+            challengedBets[index].challenger.winnerVote = winnerVote;
+        }
+        return bet;
+    }
+
+    function finalizeBet(
+        string memory uuid,
+        Status status
+    ) public returns (bool sufficient) {
+        // TODO finalize contested bet too
+        Bet memory bet;
+        uint index;
+        if (status == Status.CHALLENGED) {
+            (bet, index) = findBet(uuid, challengedBets);
+        } else if (status == Status.CONTESTED) {
+            (bet, index) = findBet(uuid, contestedBets);
+        } else {
+            revert("Invalid status");
+        }
+        require(
+            keccak256(abi.encodePacked(bet.uuid)) ==
+                keccak256(abi.encodePacked(uuid)),
+            "Bet does not exist"
+        );
+        require(
+            bet.status == Status.CHALLENGED || bet.status == Status.CONTESTED,
+            "Bet is not challenged or contested"
+        );
+        //TODO check this condition
+        // require(
+        //     msg.sender == bet.owner.punterAddress ||
+        //         msg.sender == bet.challenger.punterAddress,
+        //     "Only owner or challenger can finish bet"
+        // );
+        require(
+            bet.owner.winnerVote != WinnerVote.UNDEFINED &&
+                bet.challenger.winnerVote != WinnerVote.UNDEFINED,
+            "Both owner and challenger must vote"
+        );
+        if (bet.owner.winnerVote == bet.challenger.winnerVote) {
+            moveBet(bet, index, Status.CHALLENGED, Status.FINISHED);
+
+            uint256 newIndex = finishedBets.length - 1;
+
+            if (bet.owner.winnerVote == WinnerVote.OWNER) {
+                challengedBets[newIndex].result = bet.owner.punterAddress;
+                emit Transfer(escrow, bet.owner.punterAddress, bet.value * 2);
+                // TODO increase reputation of owner and challenger
+            } else {
+                challengedBets[newIndex].result = bet.challenger.punterAddress;
+                emit Transfer(
+                    escrow,
+                    bet.challenger.punterAddress,
+                    bet.value * 2
+                );
+                // TODO increase reputation of owner and challenger
+            }
+        } else {
+            WinnerVote majorityOraclesVotes = getMajorityWinnerVote(bet);
+
+            if (majorityOraclesVotes == WinnerVote.INVALID) {
+                moveBet(bet, index, Status.CONTESTED, Status.INVALID);
+                emit Transfer(escrow, bet.owner.punterAddress, bet.value);
+                emit Transfer(escrow, bet.challenger.punterAddress, bet.value);
+                // TODO transfer a part of the money to the oracles
+                // TODO decrease reputation of oracles that voted against the majority
+            } else if (majorityOraclesVotes == WinnerVote.OWNER) {
+                moveBet(bet, index, Status.CONTESTED, Status.FINISHED);
+                uint256 newIndex = finishedBets.length - 1;
+                finishedBets[newIndex].result = bet.owner.punterAddress;
+                emit Transfer(escrow, bet.owner.punterAddress, bet.value * 2);
+                // TODO transfer a part of the money to the oracles
+                // TODO increase reputation of oracles
+                // TODO decrease reputation of challenger
+                // TODO decrease reputation of oracles that voted against the majority
+            } else if (majorityOraclesVotes == WinnerVote.CHALLENGER) {
+                moveBet(bet, index, Status.CONTESTED, Status.FINISHED);
+                uint256 newIndex = finishedBets.length - 1;
+                finishedBets[newIndex].result = bet.challenger.punterAddress;
+                emit Transfer(
+                    escrow,
+                    bet.challenger.punterAddress,
+                    bet.value * 2
+                );
+                // TODO transfer a part of the money to the oracles
+                // TODO increase reputation of oracles
+                // TODO decrease reputation of owner
+                // TODO decrease reputation of oracles that voted against the majority
+            } else {
+                moveBet(bet, index, Status.CONTESTED, Status.INVALID);
+                emit Transfer(escrow, bet.owner.punterAddress, bet.value);
+                emit Transfer(escrow, bet.challenger.punterAddress, bet.value);
+            }
+        }
+        return true;
+    }
+
+    function contestBet(string memory uuid) public returns (bool sufficient) {
+        (Bet memory bet, uint index) = findBet(uuid, challengedBets);
+        require(
+            keccak256(abi.encodePacked(bet.uuid)) ==
+                keccak256(abi.encodePacked(uuid)),
+            "Bet does not exist"
+        );
+        require(bet.status == Status.CHALLENGED, "Bet is not challenged");
+        require(
+            msg.sender == bet.owner.punterAddress ||
+                msg.sender == bet.challenger.punterAddress,
+            "Only owner or challenger can contest bet"
+        );
+        require(
+            bet.challenger.winnerVote != WinnerVote.UNDEFINED &&
+                bet.owner.winnerVote != WinnerVote.UNDEFINED,
+            "Both owner and challenger must vote"
+        );
+        require(
+            bet.challenger.winnerVote != bet.owner.winnerVote,
+            "Owner and challenger must vote differently"
+        );
+
+        moveBet(bet, index, Status.CHALLENGED, Status.CONTESTED);
+
+        return true;
+    }
+
+    function auditBet(
+        string memory uuid,
+        WinnerVote winnerVote
+    ) public returns (bool sufficient) {
+        (Bet memory bet, uint index) = findBet(uuid, contestedBets);
+        require(
+            keccak256(abi.encodePacked(bet.uuid)) ==
+                keccak256(abi.encodePacked(uuid)),
+            "Bet does not exist"
+        );
+        require(bet.status == Status.CONTESTED, "Bet is not contested");
+        require(
+            msg.sender != bet.owner.punterAddress &&
+                msg.sender != bet.challenger.punterAddress,
+            "Only oracles can audit bet"
+        );
+        require(
+            winnerVote != WinnerVote.UNDEFINED,
+            "Winner vote must be defined"
+        );
+
+        OracleDecision memory oracleDecision = OracleDecision({
+            oracleAddress: msg.sender,
+            oracleDecision: winnerVote
+        });
+
+        for (uint i = 0; i < bet.oracles.length; i++) {
+            if (bet.oracles[i].oracleAddress == address(0)) {
+                contestedBets[index].oracles[i] = oracleDecision;
+                break;
+            }
+        }
+        if (bet.oracles[MAX_ORACLES - 1].oracleAddress != address(0)) {
+            finalizeBet(uuid, Status.CONTESTED);
+        }
+
+        return true;
+    }
+
+    // TODO function to return bets for a specific user
+
+    // TODO function to cancel a open bet
+
+    // TODO function to invalid a bet
+
+    // TODO move this utility functions to a separate file
+
+    // TODO transfer money in functions that require it
+
+    // TODO consider tax in emit Transfer
 
     function findBet(
         string memory uuid,
@@ -164,190 +427,6 @@ contract BlockBet {
         return allBets;
     }
 
-    function challengeBet(
-        string memory uuid,
-        Decision challengerDecision
-    ) public returns (bool sufficient) {
-        (Bet memory bet, uint index) = findBet(uuid, openBets);
-        require(
-            keccak256(abi.encodePacked(bet.uuid)) ==
-                keccak256(abi.encodePacked(uuid)),
-            "Bet does not exist"
-        );
-        require(bet.status == Status.OPEN, "Bet is not open for challenge");
-        require(
-            msg.sender != bet.owner.punterAddress,
-            "Owner cannot challenge own bet"
-        );
-        require(msg.sender.balance >= bet.value, "Insufficient balance");
-        require(
-            challengerDecision != Decision.UNDEFINED,
-            "Decision must be defined"
-        );
-        require(
-            bet.owner.decision != Decision.UNDEFINED,
-            "Owner decision must be defined"
-        );
-        require(
-            bet.owner.decision != challengerDecision,
-            "Challenger decision must be different from owner"
-        );
-
-        Punter memory challenger = Punter({
-            punterAddress: msg.sender,
-            decision: challengerDecision,
-            winnerVote: WinnerVote.UNDEFINED
-        });
-
-        moveBet(bet, index, Status.OPEN, Status.CHALLENGED);
-
-        uint256 newBetIndex = challengedBets.length - 1;
-
-        challengedBets[newBetIndex].challenger = challenger;
-
-        emit Transfer(msg.sender, escrow, bet.value);
-
-        return true;
-    }
-
-    function voteWinner(
-        string memory uuid,
-        WinnerVote winnerVote
-    ) public returns (Bet memory betReturn) {
-        (Bet memory bet, uint index) = findBet(uuid, challengedBets);
-        require(
-            keccak256(abi.encodePacked(bet.uuid)) ==
-                keccak256(abi.encodePacked(uuid)),
-            "Bet does not exist"
-        );
-        require(bet.status == Status.CHALLENGED, "Bet is not challenged");
-        require(
-            msg.sender == bet.owner.punterAddress ||
-                msg.sender == bet.challenger.punterAddress,
-            "Only owner or challenger can vote"
-        );
-        if (msg.sender == bet.owner.punterAddress) {
-            challengedBets[index].owner.winnerVote = winnerVote;
-        } else {
-            challengedBets[index].challenger.winnerVote = winnerVote;
-        }
-        return bet;
-    }
-
-    function finalizeBet(string memory uuid) public returns (bool sufficient) {
-        // TODO finalize contested bet too
-        (Bet memory bet, uint index) = findBet(uuid, challengedBets);
-        require(
-            keccak256(abi.encodePacked(bet.uuid)) ==
-                keccak256(abi.encodePacked(uuid)),
-            "Bet does not exist"
-        );
-        require(bet.status == Status.CHALLENGED, "Bet is not challenged");
-        require(
-            msg.sender == bet.owner.punterAddress ||
-                msg.sender == bet.challenger.punterAddress,
-            "Only owner or challenger can finish bet"
-        );
-        require(
-            bet.owner.winnerVote != WinnerVote.UNDEFINED &&
-                bet.challenger.winnerVote != WinnerVote.UNDEFINED,
-            "Both owner and challenger must vote"
-        );
-        require(
-            bet.owner.winnerVote == bet.challenger.winnerVote,
-            "Owner and challenger must vote the same"
-        );
-
-        moveBet(bet, index, Status.CHALLENGED, Status.FINISHED);
-
-        uint256 newIndex = finishedBets.length - 1;
-
-        if (bet.owner.winnerVote == WinnerVote.OWNER) {
-            challengedBets[newIndex].result = bet.owner.punterAddress;
-        } else {
-            challengedBets[newIndex].result = bet.challenger.punterAddress;
-        }
-
-        // TODO transfer money to winner
-        return true;
-    }
-
-    function contestBet(string memory uuid) public returns (bool sufficient) {
-        (Bet memory bet, uint index) = findBet(uuid, challengedBets);
-        require(
-            keccak256(abi.encodePacked(bet.uuid)) ==
-                keccak256(abi.encodePacked(uuid)),
-            "Bet does not exist"
-        );
-        require(bet.status == Status.CHALLENGED, "Bet is not challenged");
-        require(
-            msg.sender == bet.owner.punterAddress ||
-                msg.sender == bet.challenger.punterAddress,
-            "Only owner or challenger can contest bet"
-        );
-        require(
-            bet.challenger.winnerVote != WinnerVote.UNDEFINED &&
-                bet.owner.winnerVote != WinnerVote.UNDEFINED,
-            "Both owner and challenger must vote"
-        );
-        require(
-            bet.challenger.winnerVote != bet.owner.winnerVote,
-            "Owner and challenger must vote differently"
-        );
-
-        moveBet(bet, index, Status.CHALLENGED, Status.CONTESTED);
-
-        return true;
-    }
-
-    function auditBet(
-        string memory uuid,
-        WinnerVote winnerVote
-    ) public returns (bool sufficient) {
-        (Bet memory bet, uint index) = findBet(uuid, contestedBets);
-        require(
-            keccak256(abi.encodePacked(bet.uuid)) ==
-                keccak256(abi.encodePacked(uuid)),
-            "Bet does not exist"
-        );
-        require(bet.status == Status.CONTESTED, "Bet is not contested");
-        require(
-            msg.sender != bet.owner.punterAddress &&
-                msg.sender != bet.challenger.punterAddress,
-            "Only oracles can audit bet"
-        );
-        require(
-            winnerVote != WinnerVote.UNDEFINED,
-            "Winner vote must be defined"
-        );
-
-        OracleDecision memory oracleDecision = OracleDecision({
-            oracleAddress: msg.sender,
-            oracleDecision: winnerVote
-        });
-
-        for (uint i = 0; i < bet.oracles.length; i++) {
-            if (bet.oracles[i].oracleAddress == address(0)) {
-                contestedBets[index].oracles[i] = oracleDecision;
-                break;
-            }
-        }
-
-        return true;
-    }
-
-    // TODO function to return bets for a specific user
-
-    // TODO function to cancel a open bet
-
-    // TODO function to invalid a bet
-
-    // TODO move this utility functions to a separate file
-
-    // TODO transfer money in functions that require it
-
-    // TODO consider tax in emit Transfer
-
     function moveBet(
         Bet memory bet,
         uint index,
@@ -390,6 +469,36 @@ contract BlockBet {
         toArray[newIndex].status = toStatus;
         removeElementArray(index, fromArray);
         return true;
+    }
+
+    function getMajorityWinnerVote(
+        Bet memory bet
+    ) private pure returns (WinnerVote) {
+        uint ownerVotes = 0;
+        uint challengerVotes = 0;
+        uint invalidVotes = 0;
+        for (uint i = 0; i < MAX_ORACLES; i++) {
+            if (bet.oracles[i].oracleDecision == WinnerVote.OWNER) {
+                ownerVotes++;
+            } else if (bet.oracles[i].oracleDecision == WinnerVote.CHALLENGER) {
+                challengerVotes++;
+            } else if (bet.oracles[i].oracleDecision == WinnerVote.INVALID) {
+                invalidVotes++;
+            }
+        }
+        if (ownerVotes > challengerVotes && ownerVotes > invalidVotes) {
+            return WinnerVote.OWNER;
+        } else if (
+            challengerVotes > ownerVotes && challengerVotes > invalidVotes
+        ) {
+            return WinnerVote.CHALLENGER;
+        } else if (
+            invalidVotes > ownerVotes && invalidVotes > challengerVotes
+        ) {
+            return WinnerVote.INVALID;
+        } else {
+            return WinnerVote.UNDEFINED;
+        }
     }
 
     function generateUUID() private view returns (string memory) {
