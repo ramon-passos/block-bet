@@ -67,15 +67,13 @@ contract BlockBet {
     }
 
     function createBet(
-        uint value,
         Decision ownerDecision,
         string memory description
-    ) public returns (bool sufficient) {
-        require(value > 0, "Value must be greater than 0");
-        require(msg.sender.balance >= value, "Insufficient balance");
+    ) public payable returns (bool sufficient) {
+        require(msg.value > 0, "You need pay your part to create the bet");
         require(stringLength(description) > 10, "Description too short");
 
-        emit Transfer(msg.sender, escrow, value);
+        emit Transfer(msg.sender, escrow, msg.value);
         Punter memory owner = Punter({
             punterAddress: msg.sender,
             decision: ownerDecision,
@@ -85,7 +83,7 @@ contract BlockBet {
         uint256 newIndex = openBets.length - 1;
         openBets[newIndex].uuid = generateUUID();
         openBets[newIndex].timestamp = block.timestamp;
-        openBets[newIndex].value = value;
+        openBets[newIndex].value = msg.value;
         openBets[newIndex].description = description;
         openBets[newIndex].result = address(0);
         openBets[newIndex].owner = owner;

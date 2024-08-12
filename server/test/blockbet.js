@@ -4,19 +4,35 @@ const BlockBet = artifacts.require("BlockBet");
 contract('BlockBet', (accounts) => {
   it('should create a bet', async () => {
     const blockBetInstance = await BlockBet.deployed();
-    const { logs } = await blockBetInstance.createBet('10', 1, 'sample description', { from: accounts[0] });
+    const result = await blockBetInstance.createBet(1, 'sample description', { from: accounts[0], value: 100 });
+    const logs = result.logs
     const createdUuid = logs.find(log => log.event === 'BetCreated').args.uuid;
-
-    const bets = await blockBetInstance.getBets.call({from: accounts[0]});
-    const parsedBets = bets.map(bet => parseBet(bet));
-    console.log(JSON.stringify({parsedBets}, null, 2))
-    
     const fooundBet = await blockBetInstance.getBet.call(createdUuid, 0);
-
-    //console.log(JSON.stringify({fooundBet})); 
-    console.log(JSON.stringify({uuid: fooundBet.uuid}))
+    
+    console.log("============DEBUG===============")
+    const gasPrice = Number((await web3.eth.getTransaction(result.tx)).gasPrice)
+    const gasUsed = result.receipt.gasUsed
+    const weiSpent = gasUsed * gasPrice
+    const contractAccount = result.receipt.to
+    const contractBalance = Number(await web3.eth.getBalance(contractAccount))
+    console.log(
+      JSON.stringify(
+        {
+          gasPrice,
+          gasUsed,
+          weiSpent,
+          account: accounts[0],
+          contractAccount,
+          contractBalance,
+        },
+        null,
+        2
+      )
+    )
+    console.log("============DEBUG===============")
 
     assert.equal(fooundBet.uuid, createdUuid, "Bet amount is incorrect");
+    assert.equal(contractBalance, 100, "Contract ballance is incorrect");
   });
 });
 
