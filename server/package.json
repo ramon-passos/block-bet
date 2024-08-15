@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start-dev": "ganache-cli -h 0.0.0.0",
+    "start-dev": "ganache-cli --gasLimit=0x1fffffffffffff --allowUnlimitedContractSize -e 1000000000 -h 0.0.0.0",
     "truffle-console": "truffle console --network development"
   },
   "author": "",

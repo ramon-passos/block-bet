@@ -15,3 +15,6 @@ develop:
 
 test:
 	docker compose exec server bash -c "truffle test"
+
+debug:
+	docker compose exec server bash -c "truffle debug"
