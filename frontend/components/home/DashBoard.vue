@@ -44,7 +44,7 @@
         <HomeDashBoardItem :betData="bet"> </HomeDashBoardItem>
       </li>
     </ul>
-    <div v-show="betsPerPage.length == 0">
+    <div class="loader-div" v-show="betsPerPage.length == 0">
       <Loader />
     </div>
     <HomePagination
@@ -113,8 +113,33 @@ const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 };
 
-onMounted(() => {
-  fetchData();
+async function checkApiStatus() {
+  try {
+    const response = await fetch('http://localhost:8080/bets');
+    if (response.ok) {
+      await fetchData();
+      return true;
+    }
+  } catch (error) {
+    console.log('API ainda não está disponível. Tentando novamente...');
+    return false;
+  }
+}
+
+function startPolling() {
+  const interval = setInterval(async () => {
+    const isAvailable = await checkApiStatus();
+    if (isAvailable) {
+      clearInterval(interval);
+    }
+  }, 5000);
+}
+
+onMounted(async () => {
+  const isAvailable = await checkApiStatus();
+  if (!isAvailable) {
+    startPolling();
+  }
 });
 
 watch(
@@ -147,5 +172,9 @@ watch(
   max-width: 60%;
   display: grid;
   padding-bottom: 30px;
+}
+
+.loader-div {
+  align-content: center;
 }
 </style>

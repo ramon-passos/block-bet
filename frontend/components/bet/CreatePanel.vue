@@ -3,16 +3,20 @@
     <section class="bet-info row">
       <div class="col">
         <div class="row create-bet-header">
-          <h1>
-            Criar Aposta
-          </h1>
+          <h1>Criar Aposta</h1>
         </div>
         <div class="row bet-header">
-          <div class="col" id="bet-identifier">
-            <div class="col" id="desc-col">
-              <h1 id="bet-title">No que você quer apostar?</h1>
-              <h3 id="bet-subtitle">(Formule uma afirmação que pode ser respondida com sim ou não.)</h3>
-              <input type="text" placeholder="Insira uma afirmação">
+          <div class="col" id="desc-col">
+            <h1 id="bet-title">No que você quer apostar?</h1>
+            <h3 id="bet-subtitle">
+              (Formule uma afirmação que pode ser respondida com sim ou não.)
+            </h3>
+            <div class="row">
+              <input
+                type="text"
+                placeholder="Insira uma afirmação que deseja apostar"
+                v-model="betText"
+              />
             </div>
           </div>
         </div>
@@ -22,7 +26,7 @@
               <p>Valor:</p>
             </div>
             <div class="row">
-              <input type="number" placeholder="Valor da aposta">
+              <input v-model="betValue" type="number" placeholder="Valor da aposta" />
             </div>
           </div>
           <div class="col" id="unity-col">
@@ -31,8 +35,12 @@
             </div>
             <div class="row">
               <select v-model="selectedUnit" name="" id="">
-                <option disabled selected>Escolha uma unidade</option>
-                <option :value=unit v-for="unit in ethUnits" :key="unit">{{ unit }}</option>
+                <option value="" disabled selected hidden>
+                  Escolha uma unidade
+                </option>
+                <option :value="unit" v-for="unit in ethUnits" :key="unit">
+                  {{ unit }}
+                </option>
               </select>
             </div>
           </div>
@@ -44,7 +52,7 @@
             </div>
             <div class="row">
               <select v-model="selectedDecision" name="" id="">
-                <option disabled selected>Escolha</option>
+                <option value="" disabled selected hidden>Escolha</option>
                 <option value="true">Vai acontecer</option>
                 <option value="false">Não vai acontecer</option>
               </select>
@@ -52,7 +60,8 @@
           </div>
         </div>
         <div class="row" id="join-bet-row">
-          <button @click="printDados">TESTE</button>
+          <Button buttonText="Criar minha aposta" :button-function="printDados">
+          </Button>
         </div>
       </div>
     </section>
@@ -65,17 +74,25 @@ import { ethUnits } from "@/constants/ethUnits";
 
 const blockBetService = new BlockBetService();
 
-const betText = ref('');
+const betText = ref("");
 const betValue = ref(0);
-const selectedDecision = ref('');
-const selectedUnit = ref('');
+const selectedDecision = ref("");
+const selectedUnit = ref("");
 
 function printDados() {
-  console.log(selectedDecision.value, selectedUnit.value)
+  console.log(betText.value, betValue.value, selectedDecision.value, selectedUnit.value);
 }
 </script>
 
 <style scoped>
+.row {
+  gap: 50px;
+}
+
+.row input {
+  flex: 1;
+}
+
 .create-bet-header {
   justify-content: center;
   font-size: 38px;
@@ -132,7 +149,9 @@ function printDados() {
   align-self: center;
 }
 
-#value-col, #unity-col, #decision-col {
+#value-col,
+#unity-col,
+#decision-col {
   font-size: 22px;
   display: flex;
   flex-direction: column;
@@ -143,11 +162,8 @@ function printDados() {
   align-self: left;
 }
 
-option {
-  width: 100%;
-}
-
-input {
+input,
+select {
   border-radius: 10px;
   padding: 3px 10px;
   margin-top: 6px;

@@ -67,7 +67,7 @@ const closeModal = () => {
 };
 </script>
 
-<style>
+<style scoped>
 body {
   background-color: #262626;
 }
@@ -152,15 +152,5 @@ body {
 
 .modal button:hover {
   text-decoration: underline;
-}
-
-.row {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.col {
-  flex: 1;
-  justify-content: center;
 }
 </style>
