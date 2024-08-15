@@ -12,21 +12,59 @@
     </div>
     <div class="col" id="main-sec">
       <section class="main-section">
-        <div class="main-section-header">
+        <div class="row main-section-header">
           <h1>
             <b>Apostas Ativas</b>
           </h1>
-          <Button buttonText="Criar minha aposta" buttonRoute="/bet/create">
-          </Button>
+          <div class="row main-section-subheader">
+            <div class="bet-info">
+              <p id="id-info" @click="openModal">Como funcionam as apostas?</p>
+              <div v-if="isModalOpen" class="overlay" @click="closeModal"></div>
+              <div v-if="isModalOpen" class="modal">
+                <div class="row">
+                  <h2>Regras para as apostas:</h2>
+                  <button @click="closeModal" style="font-weight: 700">
+                    Fechar
+                  </button>
+                </div>
+                <div class="row">
+                  <p>
+                    Aqui estão as informações sobre como funcionam as apostas no
+                    site...
+                  </p>
+                </div>
+              </div>
+            </div>
+            <Button
+              buttonText="Criar minha aposta"
+              :buttonFunction="goToDestination"
+            >
+            </Button>
+          </div>
         </div>
         <HomeDashBoard />
       </section>
     </div>
   </div>
-  <Footer />
+  <Footer> </Footer>
 </template>
 
 <script setup>
+const router = useRouter();
+
+function goToDestination() {
+  router.push("/bet/create");
+}
+
+const isModalOpen = ref(false);
+
+const openModal = () => {
+  isModalOpen.value = true;
+};
+
+const closeModal = () => {
+  isModalOpen.value = false;
+};
 </script>
 
 <style>
@@ -64,6 +102,56 @@ body {
 
 .main-section-header button {
   margin-left: auto;
+}
+
+.main-section-subheader {
+  width: 100%;
+  justify-content: space-between;
+  align-items: end;
+}
+
+.bet-info {
+  text-decoration: underline;
+  color: rgb(31, 150, 255);
+}
+
+#id-info:hover {
+  text-decoration: underline;
+  color: rgb(4, 94, 172);
+  cursor: pointer;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+
+.modal {
+  font-size: 18px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+  z-index: 11;
+  max-width: 600px;
+  width: 90%;
+  border-radius: 10px;
+}
+
+.modal .row {
+  padding: 5px 10px;
+}
+
+.modal button:hover {
+  text-decoration: underline;
 }
 
 .row {

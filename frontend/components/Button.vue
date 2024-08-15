@@ -1,5 +1,5 @@
 <template>
-  <button @click="goToDestination">
+  <button @click="buttonFunction">
     {{ buttonText }}
   </button>
 </template>
@@ -10,16 +10,10 @@ const props = defineProps({
     type: String,
     required: true
   },
-  buttonRoute: {
-    type: String,
+  buttonFunction: {
+    type: Function,
   }
 });
-
-const router = useRouter();
-
-function goToDestination() {
-  router.push(props.buttonRoute);
-};
 </script>
 
 <style scoped>
