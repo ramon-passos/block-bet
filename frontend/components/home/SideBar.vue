@@ -9,6 +9,11 @@
       </div>
       <div class="row">
         <p>
+          Desafiadas
+        </p>
+      </div>
+      <div class="row">
+        <p>
           Contestadas
         </p>
       </div>

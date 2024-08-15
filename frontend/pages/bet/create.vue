@@ -1,10 +1,11 @@
 <template>
-    <div>
+  <div>
     <Head>
       <Title>Create your bet</Title>
     </Head>
   </div>
   <Navbar />
+  <BetCreatePanel />
   <Footer />
 </template>
 
