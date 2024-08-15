@@ -5,6 +5,7 @@ WORKDIR /app
 
 COPY . /app
 
-RUN npm install
+RUN npm install -g truffle
+RUN npm install -g ganache-cli
 
-CMD ["/bin/bash"]
+CMD ["npm", "run", "start-dev"]
