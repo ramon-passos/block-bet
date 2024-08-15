@@ -1,8 +1,8 @@
-server:
+server-up:
 	docker compose up server
 
-build:
-	docker compose exec server bash -c "truffle build"
+compile:
+	docker compose exec server bash -c "truffle compile"
 
 migrate:
 	docker compose exec server bash -c "truffle migrate --reset"
@@ -10,3 +10,8 @@ migrate:
 console:
 	docker compose exec server bash -c "truffle console"
 
+develop:
+	docker compose exec server bash -c "truffle develop"
+
+test:
+	docker compose exec server bash -c "truffle test"
