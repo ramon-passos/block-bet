@@ -23,8 +23,8 @@
               <div v-if="isModalOpen" class="modal">
                 <div class="row">
                   <h2>Regras para as apostas:</h2>
-                  <button @click="closeModal" style="font-weight: 700">
-                    Fechar
+                  <button @click="closeModal" style="font-weight: 700; font-size: 20px;">
+                    &times;
                   </button>
                 </div>
                 <div class="row">
@@ -152,5 +152,9 @@ body {
 
 .modal button:hover {
   text-decoration: underline;
+}
+
+.modal h2 {
+  align-self: center;
 }
 </style>
