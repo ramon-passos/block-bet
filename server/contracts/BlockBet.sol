@@ -99,6 +99,24 @@ contract BlockBet {
         return true;
     }
 
+    function cancelBet(string memory uuid) public returns (bool sufficient) {
+        (DataTypes.Bet memory bet, uint index) = findBet(uuid);
+        require(
+            bet.status == DataTypes.Status.OPEN,
+            "Bet is not open for cancel"
+        );
+        require(
+            msg.sender == bet.owner.punterAddress,
+            "Only owner can cancel bet"
+        );
+
+        bets[index].status = DataTypes.Status.INVALID;
+
+        emit Transfer(escrow, bet.owner.punterAddress, bet.value);
+
+        return true;
+    }
+
     function voteWinner(
         string memory uuid,
         DataTypes.WinnerVote winnerVote
@@ -242,6 +260,16 @@ contract BlockBet {
             winnerVote != DataTypes.WinnerVote.UNDEFINED,
             "Winner vote must be defined"
         );
+
+        bool hasVoted = false;
+        for (uint i = 0; i < bet.oracles.length; i++) {
+            if (bet.oracles[i].oracleAddress == msg.sender) {
+                hasVoted = true;
+                break;
+            }
+        }
+
+        require(!hasVoted, "Oracle has already voted");
 
         DataTypes.OracleDecision memory oracleDecision = DataTypes
             .OracleDecision({
