@@ -19,12 +19,6 @@ contract BlockBet {
         escrow = address(this);
     }
 
-    // TODO function to return bets for a specific user
-
-    // TODO function to cancel a open bet
-
-    // TODO function to invalid a bet
-
     // TODO transfer money in functions that require it
 
     // TODO consider tax in emit Transfer
@@ -318,6 +312,25 @@ contract BlockBet {
     ) public view returns (DataTypes.Bet memory bet) {
         (bet, ) = findBet(uuid);
         return bet;
+    }
+
+    function getBetsForUser(
+        address user
+    ) public view returns (DataTypes.Bet[] memory) {
+        DataTypes.Bet[] memory userBets;
+        uint userBetsIndex = 0;
+
+        for (uint i = 0; i < bets.length; i++) {
+            if (
+                bets[i].owner.punterAddress == user ||
+                bets[i].challenger.punterAddress == user
+            ) {
+                userBets[userBetsIndex] = bets[i];
+                userBetsIndex++;
+            }
+        }
+
+        return userBets;
     }
 
     function getMajorityWinnerVote(
