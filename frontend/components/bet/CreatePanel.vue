@@ -14,7 +14,7 @@
             <div class="row">
               <input
                 type="text"
-                placeholder="Insira uma afirmação que deseja apostar"
+                placeholder="Insira uma afirmação em que deseja apostar"
                 v-model="betText"
               />
             </div>
@@ -26,7 +26,11 @@
               <p>Valor:</p>
             </div>
             <div class="row">
-              <input v-model="betValue" type="number" placeholder="Valor da aposta" />
+              <input
+                v-model="betValue"
+                type="number"
+                placeholder="Valor da aposta"
+              />
             </div>
           </div>
           <div class="col" id="unity-col">
@@ -59,8 +63,15 @@
             </div>
           </div>
         </div>
+        <div v-if="hasErrors" class="error-messages">
+          <ul>
+            <li v-for="(error, index) in errors.value" :key="index">
+              {{ error }}
+            </li>
+          </ul>
+        </div>
         <div class="row" id="join-bet-row">
-          <Button buttonText="Criar minha aposta" :button-function="printDados">
+          <Button buttonText="Criar minha aposta" :buttonFunction="printDados">
           </Button>
         </div>
       </div>
@@ -78,9 +89,39 @@ const betText = ref("");
 const betValue = ref(0);
 const selectedDecision = ref("");
 const selectedUnit = ref("");
+const errors = ref([]);
+
+const hasErrors = computed(() => {
+  return errors.value.length > 0;
+});
 
 function printDados() {
-  console.log(betText.value, betValue.value, selectedDecision.value, selectedUnit.value);
+  errors.value = [];
+
+  if (!betText.value) {
+    errors.value.push("Esta afirmação está inválida");
+  }
+  if (betValue.value <= 0 || betValue.value == null) {
+    errors.value.push("Este valor está inválido");
+  }
+  if (!selectedDecision.value) {
+    errors.value.push("A decisão é obrigatória");
+  }
+  if (!selectedUnit.value) {
+    errors.value.push("A unidade da moeda é obrigatória");
+  }
+
+  if (hasErrors.value) {
+    console.log(errors.value);
+    return;
+  }
+
+  console.log(
+    betText.value,
+    betValue.value,
+    selectedDecision.value,
+    selectedUnit.value
+  );
 }
 </script>
 
@@ -172,5 +213,11 @@ select {
 #join-bet-row {
   padding: 30px 20px 0px 0px;
   justify-content: end;
+}
+
+.error-messages {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
 }
 </style>
