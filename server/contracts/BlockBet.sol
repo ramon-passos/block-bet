@@ -173,12 +173,15 @@ contract BlockBet {
                 bet
             );
 
+            // transfer to oracles based on their reputation?
+
             if (majorityOraclesVotes == DataTypes.WinnerVote.INVALID) {
                 bets[index].status = DataTypes.Status.INVALID;
                 emit Transfer(escrow, bet.owner.punterAddress, bet.value);
                 emit Transfer(escrow, bet.challenger.punterAddress, bet.value);
                 // TODO transfer a part of the money to the oracles
                 // TODO decrease reputation of oracles that voted against
+                // RISKY: oracles trools can vote for invalid to get money
             } else if (majorityOraclesVotes == DataTypes.WinnerVote.OWNER) {
                 bets[index].status = DataTypes.Status.FINISHED;
                 bets[index].result = bet.owner.punterAddress;
