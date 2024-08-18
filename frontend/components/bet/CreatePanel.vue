@@ -88,7 +88,7 @@
           </ul>
         </div>
         <div class="row" id="join-bet-row">
-          <Button buttonText="Criar minha aposta" :buttonFunction="printDados">
+          <Button buttonText="Criar minha aposta" :buttonFunction="createBet">
           </Button>
         </div>
       </div>
@@ -132,7 +132,7 @@ function getAccountData() {
   });
 }
 
-function printDados() {
+function createBet() {
   errors.value = [];
 
   if (!betText.value) {
@@ -159,6 +159,15 @@ function printDados() {
     selectedDecision.value,
     selectedUnit.value
   );
+
+  blockBetService.createBet({
+    value: betValue.value,
+    decision: selectedDecision.value,
+    valueType: selectedUnit.value,
+    description: betText.value,
+  }, account.value).then((data) => {
+    console.log(data);
+  });
 }
 </script>
 
