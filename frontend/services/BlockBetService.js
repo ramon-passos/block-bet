@@ -39,8 +39,31 @@ export class BlockBetService {
 
     const translatedValue = this.web3.utils.toWei(value.toString(), valueType);
     const contract = new this.web3.eth.Contract(this.abi, this.contractAddress);
-    const walletData = { from: account, value: translatedValue };
-    const data = await contract.methods.createBet(1, description).encodeABI();
+    const call = contract.methods.createBet(1, description)
+    const data = await call.encodeABI();
+    const gasEstimate = await contract.methods.createBet(1, description).estimateGas({
+      from: account,
+      value: translatedValue,
+    })
+
+    console.log({gasEstimate})
+
+    this.web3.eth.sendTransaction({
+      data,      
+      from: account,
+      to: this.contractAddress,
+      value: translatedValue,
+      gas: gasEstimate,
+    })
+    .on('transactionHash', function(hash){
+      console.log("Transaction hash:", hash);
+    })
+    .on('receipt', function(receipt){
+        console.log("Transaction was mined, receipt:", receipt);
+    })
+    .on('error', function(error){
+        console.error("Error occurred:", error);
+    });
 
     return data;
   }
