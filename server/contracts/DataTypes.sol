@@ -36,6 +36,12 @@ library DataTypes {
         WinnerVote oracleDecision;
     }
 
+    struct OraclesMajority {
+        WinnerVote winnerVote;
+        address[] oraclesWinner;
+        address[] oraclesLoser;
+    }
+
     struct Bet {
         string uuid;
         uint256 timestamp;

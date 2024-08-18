@@ -11,6 +11,7 @@ contract BlockBet {
     DataTypes.Bet[] private bets;
     mapping(address => uint) reputations;
     address public escrow;
+    uint public oraclesPorcentage = 10;
 
     event Transfer(address indexed _from, address indexed _to, uint256 _value);
     event BetCreated(string uuid);
@@ -19,9 +20,8 @@ contract BlockBet {
         escrow = address(this);
     }
 
-    // TODO transfer money in functions that require it
-
     // TODO consider tax in emit Transfer
+    // TODO decrease and increase reputation
 
     function createBet(
         DataTypes.Decision ownerDecision,
@@ -135,12 +135,8 @@ contract BlockBet {
         return bet;
     }
 
-    function finalizeBet(
-        string memory uuid,
-        DataTypes.Status status
-    ) public returns (bool sufficient) {
+    function finalizeBet(string memory uuid) public returns (bool sufficient) {
         (DataTypes.Bet memory bet, uint index) = findBet(uuid);
-        require(bet.status == status, "Bet status does not match");
         require(
             bet.status == DataTypes.Status.CHALLENGED ||
                 bet.status == DataTypes.Status.CONTESTED,
@@ -169,46 +165,7 @@ contract BlockBet {
                 // TODO increase reputation of owner and challenger
             }
         } else {
-            DataTypes.WinnerVote majorityOraclesVotes = getMajorityWinnerVote(
-                bet
-            );
-
-            // transfer to oracles based on their reputation?
-
-            if (majorityOraclesVotes == DataTypes.WinnerVote.INVALID) {
-                bets[index].status = DataTypes.Status.INVALID;
-                emit Transfer(escrow, bet.owner.punterAddress, bet.value);
-                emit Transfer(escrow, bet.challenger.punterAddress, bet.value);
-                // TODO transfer a part of the money to the oracles
-                // TODO decrease reputation of oracles that voted against
-                // RISKY: oracles trools can vote for invalid to get money
-            } else if (majorityOraclesVotes == DataTypes.WinnerVote.OWNER) {
-                bets[index].status = DataTypes.Status.FINISHED;
-                bets[index].result = bet.owner.punterAddress;
-                emit Transfer(escrow, bet.owner.punterAddress, bet.value * 2);
-                // TODO transfer a part of the money to the oracles
-                // TODO increase reputation of oracles
-                // TODO decrease reputation of challenger
-                // TODO decrease reputation of oracles that voted against the majority
-            } else if (
-                majorityOraclesVotes == DataTypes.WinnerVote.CHALLENGER
-            ) {
-                bets[index].status = DataTypes.Status.FINISHED;
-                bets[index].result = bet.challenger.punterAddress;
-                emit Transfer(
-                    escrow,
-                    bet.challenger.punterAddress,
-                    bet.value * 2
-                );
-                // TODO transfer a part of the money to the oracles
-                // TODO increase reputation of oracles
-                // TODO decrease reputation of owner
-                // TODO decrease reputation of oracles that voted against the majority
-            } else {
-                bets[index].status = DataTypes.Status.INVALID;
-                emit Transfer(escrow, bet.owner.punterAddress, bet.value);
-                emit Transfer(escrow, bet.challenger.punterAddress, bet.value);
-            }
+            transferMoneyContestedBets(bet, getMajorityWinnerVote(bet));
         }
         return true;
     }
@@ -285,7 +242,7 @@ contract BlockBet {
             bets[index].oracles[DataTypes.MAX_ORACLES - 1].oracleAddress !=
             address(0)
         ) {
-            finalizeBet(uuid, DataTypes.Status.CONTESTED);
+            finalizeBet(uuid);
         }
 
         return true;
@@ -335,29 +292,105 @@ contract BlockBet {
 
         return userBets;
     }
-
     function getMajorityWinnerVote(
         DataTypes.Bet memory bet
-    ) private pure returns (DataTypes.WinnerVote) {
+    ) private pure returns (DataTypes.OraclesMajority memory) {
         uint ownerVotes = 0;
         uint challengerVotes = 0;
+        uint invalidVotes = 0;
+        address[] memory oraclesOwner;
+        address[] memory oraclesChallenger;
+        address[] memory oraclesInvalid;
+        address[] memory oraclesLoser;
+        DataTypes.OraclesMajority memory oraclesMajority;
 
         for (uint i = 0; i < bet.oracles.length; i++) {
-            if (bet.oracles[i].oracleDecision == DataTypes.WinnerVote.OWNER) {
+            DataTypes.OracleDecision memory oracle = bet.oracles[i];
+            if (oracle.oracleDecision == DataTypes.WinnerVote.OWNER) {
+                oraclesOwner[ownerVotes] = oracle.oracleAddress;
                 ownerVotes++;
             } else if (
-                bet.oracles[i].oracleDecision == DataTypes.WinnerVote.CHALLENGER
+                oracle.oracleDecision == DataTypes.WinnerVote.CHALLENGER
             ) {
+                oraclesChallenger[challengerVotes] = oracle.oracleAddress;
                 challengerVotes++;
+            } else {
+                oraclesInvalid[challengerVotes] = oracle.oracleAddress;
+                invalidVotes++;
             }
         }
 
         if (ownerVotes > challengerVotes) {
-            return DataTypes.WinnerVote.OWNER;
+            for (uint i = 0; i < challengerVotes; i++) {
+                oraclesLoser[i] = oraclesChallenger[i];
+            }
+            for (uint i = 0; i < invalidVotes; i++) {
+                oraclesLoser[challengerVotes + i] = oraclesInvalid[i];
+            }
+            oraclesMajority.winnerVote = DataTypes.WinnerVote.OWNER;
+            oraclesMajority.oraclesWinner = oraclesOwner;
+            oraclesMajority.oraclesLoser = oraclesLoser;
+            return oraclesMajority;
         } else if (challengerVotes > ownerVotes) {
-            return DataTypes.WinnerVote.CHALLENGER;
+            for (uint i = 0; i < ownerVotes; i++) {
+                oraclesLoser[i] = oraclesOwner[i];
+            }
+            for (uint i = 0; i < invalidVotes; i++) {
+                oraclesLoser[ownerVotes + i] = oraclesInvalid[i];
+            }
+            oraclesMajority.winnerVote = DataTypes.WinnerVote.CHALLENGER;
+            oraclesMajority.oraclesWinner = oraclesChallenger;
+            oraclesMajority.oraclesLoser = oraclesLoser;
+            return oraclesMajority;
         } else {
-            return DataTypes.WinnerVote.INVALID;
+            for (uint i = 0; i < ownerVotes; i++) {
+                oraclesLoser[i] = oraclesOwner[i];
+            }
+            for (uint i = 0; i < challengerVotes; i++) {
+                oraclesLoser[ownerVotes + i] = oraclesChallenger[i];
+            }
+            oraclesMajority.winnerVote = DataTypes.WinnerVote.INVALID;
+            oraclesMajority.oraclesWinner = oraclesInvalid;
+            oraclesMajority.oraclesLoser = oraclesLoser;
+            return oraclesMajority;
+        }
+    }
+
+    // TODO: decrease and increase reputation
+    function transferMoneyContestedBets(
+        DataTypes.Bet memory bet,
+        DataTypes.OraclesMajority memory oraclesMajority
+    ) private {
+        uint256 oracleShare = ((bet.value * 2) * oraclesPorcentage) / 100;
+        uint256 refundAmount = (bet.value * 2) - oracleShare;
+        uint numberOfOraclesWinner = oraclesMajority.oraclesWinner.length;
+        if (oraclesMajority.winnerVote == DataTypes.WinnerVote.OWNER) {
+            emit Transfer(escrow, bet.owner.punterAddress, refundAmount);
+            bet.result = bet.owner.punterAddress;
+            bet.status = DataTypes.Status.FINISHED;
+        } else if (
+            oraclesMajority.winnerVote == DataTypes.WinnerVote.CHALLENGER
+        ) {
+            emit Transfer(escrow, bet.challenger.punterAddress, refundAmount);
+            bet.result = bet.challenger.punterAddress;
+            bet.status = DataTypes.Status.FINISHED;
+        } else {
+            // RISKY: oracles trools can vote for invalid to get money
+            emit Transfer(escrow, bet.owner.punterAddress, refundAmount / 2);
+            emit Transfer(
+                escrow,
+                bet.challenger.punterAddress,
+                refundAmount / 2
+            );
+            bet.status = DataTypes.Status.INVALID;
+        }
+        uint256 individualOracleShare = oracleShare / numberOfOraclesWinner;
+        for (uint i = 0; i < numberOfOraclesWinner; i++) {
+            emit Transfer(
+                escrow,
+                oraclesMajority.oraclesWinner[i],
+                individualOracleShare
+            );
         }
     }
 }
