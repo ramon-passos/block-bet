@@ -27,7 +27,7 @@ contract BlockBet {
         DataTypes.Decision ownerDecision,
         string memory description
     ) public payable returns (bool sufficient) {
-        require(msg.value > 0, "You need to pay your part to create the bet");
+        require(msg.value > 0, "Bet value must be greater than 0");
         require(Utils.stringLength(description) > 10, "Description too short");
 
         emit Transfer(msg.sender, escrow, msg.value);
@@ -298,10 +298,11 @@ contract BlockBet {
         uint ownerVotes = 0;
         uint challengerVotes = 0;
         uint invalidVotes = 0;
-        address[] memory oraclesOwner;
-        address[] memory oraclesChallenger;
-        address[] memory oraclesInvalid;
-        address[] memory oraclesLoser;
+        uint maxOracles = DataTypes.MAX_ORACLES;
+        address[] memory oraclesOwner = new address[](maxOracles);
+        address[] memory oraclesChallenger = new address[](maxOracles);
+        address[] memory oraclesInvalid = new address[](maxOracles);
+        address[] memory oraclesLoser = new address[](maxOracles);
         DataTypes.OraclesMajority memory oraclesMajority;
 
         for (uint i = 0; i < bet.oracles.length; i++) {
