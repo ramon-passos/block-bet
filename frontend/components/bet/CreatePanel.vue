@@ -63,6 +63,23 @@
             </div>
           </div>
         </div>
+
+        <div class="row">
+          <div class="col" id="decision-col">
+            <div class="row">
+              <p>Seu balanço:  {{ balance }} ETH</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col" id="decision-col">
+            <div class="row">
+              <p>Sua conta:  {{ account }}</p>
+            </div>
+          </div>
+        </div>
+
         <div v-if="hasErrors" class="error-messages">
           <ul>
             <li v-for="(error, index) in errors.value" :key="index">
@@ -82,6 +99,13 @@
 <script setup>
 import { BlockBetService } from "@/services/BlockBetService";
 import { ethUnits } from "@/constants/ethUnits";
+import { injected } from "~/connectors";
+
+
+const { active, activate, deactivate, connector, error } = useWeb3();
+useEagerConnect();
+
+await activate(injected);
 
 const blockBetService = new BlockBetService();
 
@@ -94,6 +118,19 @@ const errors = ref([]);
 const hasErrors = computed(() => {
   return errors.value.length > 0;
 });
+
+const { account, library } = useWeb3();
+const balance = ref('');
+
+onMounted(() => {
+  getAccountData();
+});
+
+function getAccountData() {
+  library.value.eth.getBalance(account.value).then((value) => {
+    balance.value = library.value.utils.fromWei(value, 'ether');
+  });
+}
 
 function printDados() {
   errors.value = [];
