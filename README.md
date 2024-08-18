@@ -47,32 +47,38 @@ Para ver as apostas criadas, chame a função `getBets`:
     contract.getBets()
 ```
 
+Pegue o uuid da aposta e armazene em uma constante:
+
+```
+    const uuid = 'uuid da aposta criada'
+```
+
 Para desafiar uma aposta, chame a função `challengeBet`:
 
 ```
-contract.challengeBet('uuid', 2, {from: accounts[1]})
+contract.challengeBet(uuid, 2, {from: accounts[1]})
 ```
 
 Para votar no vencedor de uma aposta, chame a função `voteWinner`:
 
 ```
-contract.voteWinner('uuid', 1, {from: accounts[0]})
+contract.voteWinner(uuid, 1, {from: accounts[0]})
 ```
 
 Para finalizar uma aposta, chame a função `finalizeBet`:
 
 ```
-contract.finalizeBet('uuid', 1)
+contract.finalizeBet(uuid, 1)
 ```
 
 Para contestar uma aposta, chame a função `contestBet`:
 
 ```
-contract.contestBet('uuid', {from: accounts[1]})
+contract.contestBet(uuid, {from: accounts[1]})
 ```
 
 Para auditar uma aposta, chame a função `auditBet`:
 
 ```
-contract.auditBet('uuid', 2, {from: accounts[3]})
+contract.auditBet(uuid, 2, {from: accounts[3]})
 ```
