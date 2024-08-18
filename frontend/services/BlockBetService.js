@@ -6,6 +6,7 @@ export class BlockBetService {
     this.web3 = new Web3("http://localhost:8545");
     this.abi = this._getAbi();
     this.contractAddress = '0xacb42380cf2523ba70d34e6b941ecbdf5e270083';
+    this.contract = new this.web3.eth.Contract(this.abi, this.contractAddress);
   }
 
   async getBets(filters) {
@@ -34,19 +35,10 @@ export class BlockBetService {
   
   async createBet(betData, account) {
     const { description, value, valueType, decision } = betData;
-
-    console.log(JSON.stringify(betData, null, 2));
-
-    const translatedValue = this.web3.utils.toWei(value.toString(), valueType);
-    const contract = new this.web3.eth.Contract(this.abi, this.contractAddress);
-    const call = contract.methods.createBet(1, description)
+    const translatedValue = this._translate_value(value, valueType);
+    const call = this.contract.methods.createBet(this._translate_decision(decision), description)
     const data = await call.encodeABI();
-    const gasEstimate = await contract.methods.createBet(1, description).estimateGas({
-      from: account,
-      value: translatedValue,
-    })
-
-    console.log({gasEstimate})
+    const gasEstimate = await call.estimateGas({ from: account, value: translatedValue })
 
     this.web3.eth.sendTransaction({
       data,      
@@ -79,6 +71,14 @@ export class BlockBetService {
   // async function auditBet() {}
 
   _getAbi() {
-    return []
+    return [];
+  }
+
+  _translate_decision(decision) {
+    return decision ? 1 : 0;
+  }
+
+  _translate_value(value, valueType) {
+    return this.web3.utils.toWei(value.toString(), valueType);
   }
 }
