@@ -58,7 +58,7 @@ contract("BlockBet", (accounts) => {
   describe("auditBet", () => {
     let createdUuid;
 
-    before(async () => {
+    beforeEach(async () => {
       const result = await blockBetInstance.createBet(1, "sample description", {
         from: accounts[0],
         value: web3.utils.toWei("1", "ether"),
@@ -70,12 +70,19 @@ contract("BlockBet", (accounts) => {
       });
       await blockBetInstance.voteWinner(createdUuid, 1, { from: accounts[0] });
       await blockBetInstance.voteWinner(createdUuid, 2, { from: accounts[1] });
-      await blockBetInstance.contestBet(createdUuid, { from: accounts[1] });
     });
     it("should audit a bet with the correct values", async () => {
       const auditResult = await blockBetInstance.auditBet(createdUuid, 1, {
         from: accounts[2],
       });
+    });
+    it("should throw an error if the owner try to audit the bet", async () => {
+      try {
+        await blockBetInstance.auditBet(createdUuid, 1, { from: accounts[0] });
+        assert.fail();
+      } catch (error) {
+        assert.ok(error.message.includes("Only oracles can audit bet"));
+      }
     });
   });
 });
@@ -96,7 +103,7 @@ function parseBet(bet) {
 
 function parsePunter(punter) {
   return {
-    punterAddress: punter.PunterAddress,
+    punterAddress: punter.punterAddress,
     decision: parseDecision(punter.decision),
     winnerVote: parseWinnerVote(punter.winnerVote),
   };
@@ -116,7 +123,7 @@ function parseDecision(decisionNumber) {
     1: "FALSE",
   };
 
-  return decisionMap[decisionNumber];
+  return decisionMap[Number(decisionNumber)];
 }
 
 function parseWinnerVote(winnerVoteNumber) {
@@ -125,8 +132,7 @@ function parseWinnerVote(winnerVoteNumber) {
     1: "OWNER",
     2: "CHALLENGER",
   };
-
-  return winnerVoteMap[winnerVoteNumber];
+  return winnerVoteMap[Number(winnerVoteNumber)];
 }
 
 function parseStatus(statusNumber) {

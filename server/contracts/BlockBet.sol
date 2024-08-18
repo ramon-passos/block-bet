@@ -132,10 +132,19 @@ contract BlockBet {
             bets[index].challenger.winnerVote = winnerVote;
         }
 
+        bool hasVoted = bets[index].owner.winnerVote !=
+            DataTypes.WinnerVote.UNDEFINED &&
+            bets[index].challenger.winnerVote != DataTypes.WinnerVote.UNDEFINED;
+        bool isContested = bet.owner.winnerVote != bet.challenger.winnerVote;
+        if (hasVoted && !isContested) {
+            finalizeBet(uuid);
+        } else if (hasVoted && isContested) {
+            contestBet(uuid);
+        }
         return bet;
     }
 
-    function finalizeBet(string memory uuid) public returns (bool sufficient) {
+    function finalizeBet(string memory uuid) private returns (bool sufficient) {
         (DataTypes.Bet memory bet, uint index) = findBet(uuid);
         require(
             bet.status == DataTypes.Status.CHALLENGED ||
@@ -170,16 +179,11 @@ contract BlockBet {
         return true;
     }
 
-    function contestBet(string memory uuid) public returns (bool sufficient) {
+    function contestBet(string memory uuid) private returns (bool sufficient) {
         (DataTypes.Bet memory bet, uint index) = findBet(uuid);
         require(
             bet.status == DataTypes.Status.CHALLENGED,
             "Bet is not challenged"
-        );
-        require(
-            msg.sender == bet.owner.punterAddress ||
-                msg.sender == bet.challenger.punterAddress,
-            "Only owner or challenger can contest bet"
         );
         require(
             bet.challenger.winnerVote != DataTypes.WinnerVote.UNDEFINED &&
@@ -251,7 +255,7 @@ contract BlockBet {
     // TODO implement a search algorithm to find the bet
     function findBet(
         string memory uuid
-    ) public view returns (DataTypes.Bet memory bet, uint index) {
+    ) private view returns (DataTypes.Bet memory bet, uint index) {
         for (uint i = 0; i < bets.length; i++) {
             if (
                 keccak256(abi.encodePacked(bets[i].uuid)) ==

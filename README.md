@@ -65,17 +65,8 @@ Para votar no vencedor de uma aposta, chame a função `voteWinner`:
 contract.voteWinner(uuid, 1, {from: accounts[0]})
 ```
 
-Para finalizar uma aposta, chame a função `finalizeBet`:
-
-```
-contract.finalizeBet(uuid, 1)
-```
-
-Para contestar uma aposta, chame a função `contestBet`:
-
-```
-contract.contestBet(uuid, {from: accounts[1]})
-```
+Se os votos forem iguais, automaticamente o contrato finaliza a aposta e distribui o valor para o vencedor.
+Do contrário, o contrato fica em estado de auditoria.
 
 Para auditar uma aposta, chame a função `auditBet`:
 
