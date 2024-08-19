@@ -53,9 +53,8 @@ contract BlockBet {
     }
 
     function challengeBet(
-        string memory uuid,
-        DataTypes.Decision challengerDecision
-    ) public returns (bool sufficient) {
+        string memory uuid
+    ) public payable returns (bool sufficient) {
         (DataTypes.Bet memory bet, uint index) = findBet(uuid);
         require(
             bet.status == DataTypes.Status.OPEN,
@@ -65,19 +64,15 @@ contract BlockBet {
             msg.sender != bet.owner.punterAddress,
             "Owner cannot challenge own bet"
         );
-        require(msg.sender.balance >= bet.value, "Insufficient balance");
-        require(
-            challengerDecision != DataTypes.Decision.UNDEFINED,
-            "Decision must be defined"
-        );
-        require(
-            bet.owner.decision != DataTypes.Decision.UNDEFINED,
-            "Owner decision must be defined"
-        );
-        require(
-            bet.owner.decision != challengerDecision,
-            "Challenger decision must be different from owner"
-        );
+        require(msg.value == bet.value, "Insufficient balance");
+
+        DataTypes.Decision challengerDecision;
+
+        if (bet.owner.decision == DataTypes.Decision.TRUE) {
+            challengerDecision = DataTypes.Decision.FALSE;
+        } else {
+            challengerDecision = DataTypes.Decision.TRUE;
+        }
 
         DataTypes.Punter memory challenger = DataTypes.Punter({
             punterAddress: msg.sender,
