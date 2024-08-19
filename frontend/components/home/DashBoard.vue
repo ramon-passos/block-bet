@@ -154,8 +154,8 @@ function removeFilter(key, value) {
 .sub-header {
   display: flex;
   justify-content: center;
-  width: 60%;
-  margin-top: 20px;
+  padding-left: 50px;
+  margin: 20px auto;
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
