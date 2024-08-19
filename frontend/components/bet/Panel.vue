@@ -135,17 +135,18 @@ function cancelBet() {
 
 <style scoped>
 .bet-wrapper {
-  background-color: white;
+  background-color: #1b1b1b;
   display: flex;
   justify-content: center;
   padding: 50px;
 }
 
 .bet-info {
+  color: white;
   width: 70%;
   margin: 0;
   padding: 30px 70px;
-  background-color: rgb(233, 240, 238);
+  background-color: rgb(59, 59, 59);
   border: 1 solid white;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   border-radius: 15px;

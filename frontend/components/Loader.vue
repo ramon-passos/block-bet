@@ -11,6 +11,7 @@
 .loader-section {
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .loader {

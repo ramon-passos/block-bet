@@ -2,9 +2,14 @@
   <nav class="navbar">
     <div class="left">
       <button @click="toggleSidebar">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white"
-          class="w-6 h-6">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5M3.75 12h16.5M3.75 18.75h16.5" />
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-8 h-8">
+          <defs>
+            <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" style="stop-color:rgb(31,150,255);stop-opacity:1" />
+              <stop offset="100%" style="stop-color:rgb(226,14,208);stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <path stroke="url(#gradient1)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5M3.75 12h16.5M3.75 18.75h16.5" />
         </svg>
       </button>
     </div>
@@ -45,6 +50,16 @@ const props = defineProps({
   padding: 0 20px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   box-sizing: border-box;
+}
+
+.left {
+  border-radius: 50%;
+  padding: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.left:hover {
+  background-color: rgb(59, 59, 59);
 }
 
 .navbar .left,
