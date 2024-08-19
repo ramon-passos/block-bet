@@ -1,6 +1,11 @@
 <template>
   <nav class="navbar">
     <div class="navbar-content">
+      <button @click="toggleSidebar">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5M3.75 12h16.5M3.75 18.75h16.5" />
+        </svg>
+      </button>
       <NuxtLink to="/">
         <div class="logo-wrapper">
           <p>Block</p>
@@ -18,8 +23,12 @@
 </template>
 
 <script setup>
-
-
+const props = defineProps({
+  toggleSidebar: {
+    type: Function,
+    required: true
+  },
+})
 </script>
 
 <style scoped>
@@ -74,9 +83,10 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  border-image: linear-gradient(to right, rgb(31, 150, 255), blueviolet, rgb(226, 14, 208));
-  border-bottom: 2px solid white;
   padding-bottom: 5px;
+  border-bottom: 2px solid transparent;
+  border-image: linear-gradient(to right, rgb(31, 150, 255), blueviolet, rgb(226, 14, 208)) 1 0 0;
+  border-image-slice: 1;
   transition: 0.2s ease;
 }
 

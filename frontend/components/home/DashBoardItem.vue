@@ -48,7 +48,6 @@ function showBet(uuid) {
   background-color: rgb(59, 59, 59);
   padding: 15px 20px;
   margin: 30px auto;
-  width: 80%;
   border: 0 solid white;
   border-radius: 15px;
   transition: background-color 0.3s ease, transform 0.3s ease;
@@ -77,6 +76,7 @@ function showBet(uuid) {
 
 #desc-col {
   flex: 8;
+  padding-right: 30px;
 }
 
 #status-col {

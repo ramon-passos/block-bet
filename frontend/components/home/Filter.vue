@@ -43,7 +43,7 @@ function applyFilter() {
 
 <style scoped>
 .bet-filter {
-  border: 1px solid white;
+  border: 1px solid #161616;
   border-radius: 10px;
   padding: 5px 10px;
   font-size: 13px;

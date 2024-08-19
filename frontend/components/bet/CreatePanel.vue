@@ -108,6 +108,7 @@ useEagerConnect();
 await activate(injected);
 
 const blockBetService = new BlockBetService();
+const router = useRouter();
 
 const betText = ref("");
 const betValue = ref(0);
@@ -168,6 +169,8 @@ function createBet() {
   }, account.value).then((data) => {
     console.log(data);
   });
+
+  router.push("/");
 }
 </script>
 

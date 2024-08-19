@@ -122,10 +122,14 @@ function getBet() {
     });
 }
 
+const router = useRouter();
+
 function cancelBet() {
   blockBetService.cancelBet(uuid, bet.value.owner?.punterAddress).then(data => {
     console.log(data);
   });
+
+  router.push("/");
 }
 </script>
 

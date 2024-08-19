@@ -5,11 +5,9 @@
     </Head>
   </div>
 
-  <Navbar />
+  <Navbar :toggleSidebar="toggleSidebar" />
   <div class="row">
-    <div class="col sidebar">
-      <HomeSideBar />
-    </div>
+    <HomeSideBar :isSidebarOpen="isSidebarOpen" :toggleSidebar="toggleSidebar" />
     <div class="col" id="main-sec">
       <section class="main-section">
         <div class="row main-section-header">
@@ -35,10 +33,7 @@
                 </div>
               </div>
             </div>
-            <Button
-              buttonText="Criar minha aposta"
-              :buttonFunction="goToDestination"
-            >
+            <Button buttonText="Criar minha aposta" :buttonFunction="goToDestination">
             </Button>
           </div>
         </div>
@@ -65,6 +60,12 @@ const openModal = () => {
 const closeModal = () => {
   isModalOpen.value = false;
 };
+
+const isSidebarOpen = ref(false)
+
+const toggleSidebar = () => {
+  isSidebarOpen.value = !isSidebarOpen.value
+}
 </script>
 
 <style scoped>
@@ -78,11 +79,12 @@ body {
 }
 
 .main-section {
+  height: 100%;
   background-color: #1b1b1b;
   display: grid;
   justify-content: center;
-  padding: 0px 200px;
-  padding-bottom: 30px;
+  padding: 0px 0px 30px 0px;
+  margin: 0;
 }
 
 #main-sec {
@@ -119,6 +121,7 @@ body {
 .bet-info {
   text-decoration: underline;
   color: rgb(31, 150, 255);
+  padding-right: 400px;
 }
 
 #id-info:hover {

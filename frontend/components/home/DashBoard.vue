@@ -38,7 +38,7 @@
       />
     </div>
   </div>
-  <section class="dashboard-panel">
+  <section class="dashboard-panel col">
     <ul>
       <li v-for="bet in betsPerPage" :key="bet.id">
         <HomeDashBoardItem :betData="bet"> </HomeDashBoardItem>
@@ -158,11 +158,16 @@ function removeFilter(key, value) {
 }
 
 .dashboard-panel {
-  min-height: 600px;
-  min-width: 900px;
-  max-width: 60%;
-  display: grid;
-  padding-bottom: 30px;
+  justify-content: center;
+  padding: 30px 0px;
+  box-sizing: border-box;
+}
+
+.dashboard-panel ul {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
 }
 
 .loader-div {
