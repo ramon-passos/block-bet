@@ -1,60 +1,43 @@
 <template>
-  <div v-if="isSidebarOpen" class="sidebar">
+  <div :class="{ sidebar: true, 'sidebar-open': isSidebarOpen, 'sidebar-closed': !isSidebarOpen }">
     <section class="side-options-section">
+      <!-- Conteúdo da sidebar -->
       <section class="personal-options-section">
         <h2>Minhas apostas</h2>
         <div class="row">
-          <p>
-            Abertas
-          </p>
+          <p>Abertas</p>
         </div>
         <div class="row">
-          <p>
-            Desafiadas
-          </p>
+          <p>Desafiadas</p>
         </div>
         <div class="row">
-          <p>
-            Contestadas
-          </p>
+          <p>Contestadas</p>
         </div>
       </section>
       <hr>
       <section class="general-options-section">
         <h2>Outros</h2>
         <div class="row">
-          <p>
-            Minha reputação
-          </p>
+          <p>Minha reputação</p>
         </div>
         <div class="row">
-          <p>
-            Apostas auditadas
-          </p>
+          <p>Apostas auditadas</p>
         </div>
         <div class="row">
-          <p>
-            Teste
-          </p>
+          <p>Teste</p>
         </div>
       </section>
       <hr>
       <section class="category-section">
         <h2>Categorias</h2>
         <div class="row">
-          <p>
-            Esportes
-          </p>
+          <p>Esportes</p>
         </div>
         <div class="row">
-          <p>
-            Jogos eletrônicos
-          </p>
+          <p>Jogos eletrônicos</p>
         </div>
         <div class="row">
-          <p>
-            Política
-          </p>
+          <p>Política</p>
         </div>
       </section>
       <hr>
@@ -76,23 +59,29 @@ const props = defineProps({
 </script>
 
 <style scoped>
+.sidebar {
+  top: 0;
+  left: 0;
+  background-color: #333;
+  color: white;
+  transform: translateX(-100%); /* Começa fora da tela */
+  transition: transform 0.4s ease, width 0.4s ease; /* Animação suave */
+}
+
+.sidebar-open {
+  transform: translateX(0); /* Move a sidebar para a tela */
+  width: 350px;
+  min-width: 350px;
+}
+
+.sidebar-closed {
+  width: 0px;
+  transform: translateX(-100%); /* Move a sidebar para fora da tela */
+}
+
 section {
   margin-top: 40px;
   margin-bottom: 20px;
-}
-
-.sidebar {
-  flex: 1;
-  top: 0;
-  left: 0;
-  min-width: 350px;
-  background-color: #333;
-  color: white;
-  transition: transform 0.3s ease;
-}
-
-.sidebar.closed {
-  transform: translateX(-100%);
 }
 
 .side-options-section {
