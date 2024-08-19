@@ -66,7 +66,30 @@ export class BlockBetService {
     return result
   }
 
-  // async function challengeBet() {}
+  async challengeBet(uuid, account, value) {
+    const call = this.contract.methods.challengeBet(uuid)
+    const data = await call.encodeABI();
+    const gasEstimate = await call.estimateGas({ from: account, value })
+
+    this.web3.eth.sendTransaction({
+      data,      
+      value,
+      from: account,
+      to: this.contractAddress,
+      gas: gasEstimate,
+    })
+    .on('transactionHash', function(hash){
+      console.log("Transaction hash:", hash);
+    })
+    .on('receipt', function(receipt){
+        console.log("Transaction was mined, receipt:", receipt);
+    })
+    .on('error', function(error){
+        console.error("Error occurred:", error);
+    });
+
+    return data;
+  }
 
   // async function voteWinner() {}
 

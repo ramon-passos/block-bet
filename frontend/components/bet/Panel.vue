@@ -41,7 +41,9 @@
           </div>
         </div>
         <div class="row bet-option" id="join-bet" v-show="shouldShowJoinButton(bet.status)">
-          <Button buttonText="Entrar na aposta">
+          <Button buttonText="Entrar na aposta"
+            :buttonFunction="challengeBet"
+          >
           </Button>
         </div>
         <div class="row bet-option" id="cancel-bet" v-show="betIsCancelable(bet.status)">
@@ -81,6 +83,8 @@ const props = defineProps({
 
 const { uuid } = props;
 const { account, activate } = useWeb3();
+const router = useRouter();
+
 useEagerConnect();
 await activate(injected);
 
@@ -122,10 +126,16 @@ function getBet() {
     });
 }
 
-const router = useRouter();
-
 function cancelBet() {
   blockBetService.cancelBet(uuid, bet.value.owner?.punterAddress).then(data => {
+    console.log(data);
+  });
+
+  router.push("/");
+}
+
+function challengeBet() {
+  blockBetService.challengeBet(uuid, account.value, bet.value.value).then(data => {
     console.log(data);
   });
 
