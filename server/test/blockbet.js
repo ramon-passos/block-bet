@@ -55,6 +55,89 @@ contract("BlockBet", (accounts) => {
       assert.ok(error.message.includes("Bet value must be greater than 0"));
     }
   });
+  describe("challengeBet", () => {
+    let createdUuid;
+    beforeEach(async () => {
+      const result = await blockBetInstance.createBet(1, "sample description", {
+        from: accounts[0],
+        value: 100,
+      });
+      const logs = result.logs;
+      createdUuid = logs.find((log) => log.event === "BetCreated").args.uuid;
+    });
+    it("should challenge a bet successfully", async () => {
+      const result = await blockBetInstance.challengeBet(createdUuid, {
+        from: accounts[1],
+        value: 100,
+      });
+      const foundBet = await blockBetInstance.getBet.call(createdUuid);
+      const contractAccount = result.receipt.to;
+      const contractBalance = Number(
+        await web3.eth.getBalance(contractAccount)
+      );
+      assert.equal(
+        foundBet.challenger.punterAddress,
+        accounts[1],
+        "Challenger address is incorrect"
+      );
+      assert.equal(
+        foundBet.challenger.decision,
+        2,
+        "Challenger decision is incorrect"
+      );
+      assert.equal(contractBalance, 200, "Contract ballance is incorrect");
+    });
+    it("should throw an error if the bet is already challenged", async () => {
+      await blockBetInstance.challengeBet(createdUuid, {
+        from: accounts[1],
+        value: 100,
+      });
+      try {
+        await blockBetInstance.challengeBet(createdUuid, {
+          from: accounts[2],
+          value: 100,
+        });
+        assert.fail();
+      } catch (error) {
+        assert.ok(error.message.includes("Bet is not open for challenge"));
+      }
+    });
+    it("should throw an error if owner try to challenge the bet", async () => {
+      try {
+        await blockBetInstance.challengeBet(createdUuid, {
+          from: accounts[0],
+          value: 100,
+        });
+        assert.fail();
+      } catch (error) {
+        assert.ok(error.message.includes("Owner cannot challenge own bet"));
+      }
+    });
+  });
+  describe("voteWinner", () => {
+    let createdUuid;
+    beforeEach(async () => {
+      const result = await blockBetInstance.createBet(1, "sample description", {
+        from: accounts[0],
+        value: 100,
+      });
+      const logs = result.logs;
+      createdUuid = logs.find((log) => log.event === "BetCreated").args.uuid;
+      await blockBetInstance.challengeBet(createdUuid, {
+        from: accounts[1],
+        value: 100,
+      });
+    });
+    it("should vote for the winner successfully", async () => {
+      await blockBetInstance.voteWinner(createdUuid, 1, { from: accounts[0] });
+      const foundBet = await blockBetInstance.getBet.call(createdUuid);
+      assert.equal(
+        foundBet.owner.winnerVote,
+        1,
+        "Owner winner vote is incorrect"
+      );
+    });
+  });
   describe("auditBet", () => {
     let createdUuid;
 
@@ -65,20 +148,57 @@ contract("BlockBet", (accounts) => {
       });
       const logs = result.logs;
       createdUuid = logs.find((log) => log.event === "BetCreated").args.uuid;
-      await blockBetInstance.challengeBet(createdUuid, 2, {
+      await blockBetInstance.challengeBet(createdUuid, {
         from: accounts[1],
+        value: 100,
       });
       await blockBetInstance.voteWinner(createdUuid, 1, { from: accounts[0] });
       await blockBetInstance.voteWinner(createdUuid, 2, { from: accounts[1] });
     });
     it("should audit a bet with the correct values", async () => {
-      const auditResult = await blockBetInstance.auditBet(createdUuid, 1, {
+      const vote = 1;
+      await blockBetInstance.auditBet(createdUuid, vote, {
         from: accounts[2],
       });
+      const foundBet = await blockBetInstance.getBet.call(createdUuid);
+      const oracle = foundBet.oracles[0];
+      assert.equal(
+        oracle.oracleAddress,
+        accounts[2],
+        "Oracle address is incorrect"
+      );
+      assert.equal(oracle.oracleDecision, vote, "Oracle decision is incorrect");
+    });
+    it("should finalize bet if all oracles have voted", async () => {
+      await blockBetInstance.auditBet(createdUuid, 1, { from: accounts[2] });
+      await blockBetInstance.auditBet(createdUuid, 1, { from: accounts[3] });
+      await blockBetInstance.auditBet(createdUuid, 1, { from: accounts[4] });
+      await blockBetInstance.auditBet(createdUuid, 1, { from: accounts[5] });
+      await blockBetInstance.auditBet(createdUuid, 1, { from: accounts[6] });
+      const foundBet = await blockBetInstance.getBet.call(createdUuid);
+      console.log("********************************");
+      console.log(foundBet);
+    });
+    it("should throw an error if the oracle try to audit the bet again", async () => {
+      try {
+        await blockBetInstance.auditBet(createdUuid, 1, { from: accounts[2] });
+        await blockBetInstance.auditBet(createdUuid, 1, { from: accounts[2] });
+        assert.fail();
+      } catch (error) {
+        assert.ok(error.message.includes("Oracle has already voted"));
+      }
     });
     it("should throw an error if the owner try to audit the bet", async () => {
       try {
         await blockBetInstance.auditBet(createdUuid, 1, { from: accounts[0] });
+        assert.fail();
+      } catch (error) {
+        assert.ok(error.message.includes("Only oracles can audit bet"));
+      }
+    });
+    it("should throw an error if the challenger try to audit the bet", async () => {
+      try {
+        await blockBetInstance.auditBet(createdUuid, 1, { from: accounts[1] });
         assert.fail();
       } catch (error) {
         assert.ok(error.message.includes("Only oracles can audit bet"));
