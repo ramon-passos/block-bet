@@ -1,5 +1,6 @@
 import Web3 from "web3";
 import { abi } from "@/contract/abi";
+import { contractAddress } from "@/contract/address";
 import { parseBet } from "./betTranslator";
 
 export class BlockBetService {
@@ -7,7 +8,7 @@ export class BlockBetService {
     this.baseUrl = 'http://localhost:8080';
     this.web3 = new Web3("http://localhost:8545");
     this.abi = abi;
-    this.contractAddress = '0x613b7e806dd8930753b5f152b3e5ef7f20e51703';
+    this.contractAddress = contractAddress;
     this.contract = new this.web3.eth.Contract(this.abi, this.contractAddress);
   }
 
