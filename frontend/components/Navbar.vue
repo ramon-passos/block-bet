@@ -64,7 +64,7 @@ const props = defineProps({
   display: flex;
   align-items: center;
   gap: 4px;
-  width: 80px;
+  width: 106px;
 }
 
 .logo-wrapper p {

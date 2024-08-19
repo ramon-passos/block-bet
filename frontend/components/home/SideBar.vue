@@ -63,6 +63,7 @@ const props = defineProps({
   top: 0;
   left: 0;
   background-color: #333;
+  overflow: hidden;
   color: white;
   transform: translateX(-100%); /* Começa fora da tela */
   transition: transform 0.4s ease, width 0.4s ease; /* Animação suave */
@@ -76,6 +77,7 @@ const props = defineProps({
 
 .sidebar-closed {
   width: 0px;
+  overflow: hidden;
   transform: translateX(-100%); /* Move a sidebar para fora da tela */
 }
 

@@ -8,38 +8,36 @@
   <Navbar :toggleSidebar="toggleSidebar" />
   <div class="row">
     <HomeSideBar :isSidebarOpen="isSidebarOpen" :toggleSidebar="toggleSidebar" />
-    <div class="col" id="main-sec">
-      <section class="main-section">
-        <div class="row main-section-header">
-          <h1>
-            <b>Apostas Ativas</b>
-          </h1>
-          <div class="row main-section-subheader">
-            <div class="bet-info">
-              <p id="id-info" @click="openModal">Como funcionam as apostas?</p>
-              <div v-if="isModalOpen" class="overlay" @click="closeModal"></div>
-              <div v-if="isModalOpen" class="modal">
-                <div class="row">
-                  <h2>Regras para as apostas:</h2>
-                  <button @click="closeModal" style="font-weight: 700; font-size: 20px;">
-                    &times;
-                  </button>
-                </div>
-                <div class="row">
-                  <p>
-                    Aqui estão as informações sobre como funcionam as apostas no
-                    site...
-                  </p>
-                </div>
+    <section class="main-section col">
+      <div class="row main-section-header">
+        <h1>
+          <b>Apostas Ativas</b>
+        </h1>
+        <div class="row main-section-subheader">
+          <div class="bet-info">
+            <p id="id-info" @click="openModal">Como funcionam as apostas?</p>
+            <div v-if="isModalOpen" class="overlay" @click="closeModal"></div>
+            <div v-if="isModalOpen" class="modal">
+              <div class="row">
+                <h2>Regras para as apostas:</h2>
+                <button @click="closeModal" style="font-weight: 700; font-size: 20px;">
+                  &times;
+                </button>
+              </div>
+              <div class="row">
+                <p>
+                  Aqui estão as informações sobre como funcionam as apostas no
+                  site...
+                </p>
               </div>
             </div>
-            <Button buttonText="Criar minha aposta" :buttonFunction="goToDestination">
-            </Button>
           </div>
+          <Button buttonText="Criar minha aposta" :buttonFunction="goToDestination">
+          </Button>
         </div>
-        <HomeDashBoard />
-      </section>
-    </div>
+      </div>
+      <HomeDashBoard />
+    </section>
   </div>
   <Footer> </Footer>
 </template>
@@ -79,15 +77,8 @@ body {
 }
 
 .main-section {
-  height: 100%;
   background-color: #1b1b1b;
-  display: grid;
-  justify-content: center;
-  padding: 0px 0px 30px 0px;
-  margin: 0;
-}
-
-#main-sec {
+  padding: 0px 400px;
   flex: 5;
 }
 
@@ -104,7 +95,6 @@ body {
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 }
 
