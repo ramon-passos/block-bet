@@ -325,7 +325,7 @@ contract BlockBet {
             }
         }
 
-        if (ownerVotes > challengerVotes) {
+        if (ownerVotes > challengerVotes && ownerVotes > invalidVotes) {
             for (uint i = 0; i < challengerVotes; i++) {
                 oraclesLoser[i] = oraclesChallenger[i];
             }
@@ -336,7 +336,9 @@ contract BlockBet {
             oraclesMajority.oraclesWinner = oraclesOwner;
             oraclesMajority.oraclesLoser = oraclesLoser;
             return oraclesMajority;
-        } else if (challengerVotes > ownerVotes) {
+        } else if (
+            challengerVotes > ownerVotes && challengerVotes > invalidVotes
+        ) {
             for (uint i = 0; i < ownerVotes; i++) {
                 oraclesLoser[i] = oraclesOwner[i];
             }
