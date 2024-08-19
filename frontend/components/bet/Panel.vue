@@ -5,7 +5,7 @@
         <div class="row bet-header">
           <div class="col" id="bet-identifier">
             <div class="row" id="bet-title">
-              <h1>Aposta #{{ bet.id }}</h1>
+              <h1>Aposta #{{ bet.uuid }}</h1>
             </div>
             <div class="row" id="bet-subtitle">
               <div class="col">
@@ -36,7 +36,7 @@
               <p>Valor:</p>
             </div>
             <div class="row">
-              {{ bet.value }}
+              {{ ethValue(bet.value) }} ETH
             </div>
           </div>
         </div>
@@ -45,7 +45,9 @@
           </Button>
         </div>
         <div class="row bet-option" id="cancel-bet" v-show="betIsCancelable(bet.status)">
-          <Button buttonText="Cancelar minha aposta">
+          <Button buttonText="Cancelar minha aposta"
+            :buttonFunction="cancelBet"
+          >
           </Button>
         </div>
         <div class="row bet-option" id="audit-bet" v-show="betIsContested(bet.status)">
@@ -64,18 +66,19 @@
 <script setup>
 import { BlockBetService } from "@/services/BlockBetService";
 import { StatusEnum } from "@/constants/statusEnum";
+import Web3 from "web3";
 
 const blockBetService = new BlockBetService();
 const bet = ref({});
 
 const props = defineProps({
-  id: {
+  uuid: {
     type: Number,
     required: true,
   },
 });
 
-const { id } = props;
+const { uuid } = props;
 const { account } = useWeb3();
 const ownerAddress = ref("");
 
@@ -83,35 +86,44 @@ onMounted(() => {
   getBet();
 });
 
-const getBet = () => {
+const betIsOpen = (status) => {
+  return status == "OPEN";
+}
+
+const shouldShowJoinButton = (status) => {
+  return betIsOpen(status) && ownerAddress.value !== account.value;
+}
+
+const betIsCancelable = (status) => {
+  return betIsOpen(status) && ownerAddress.value === account.value;
+}
+
+const betIsContested = (status) => {
+  return status == "CONTESTED";
+}
+
+const betIsChallenged = (status) => {
+  return status == "CHALLENGED";
+}
+
+function ethValue(value) {
+  return Web3.utils.fromWei(value?.toString() || '0', "ether");
+}
+
+function getBet() {
   blockBetService
-    .getBet(id)
-    .then((response) => response.json())
-    .then((data) => {
-      bet.value = data[0];
+    .getBet(uuid)
+    .then(data => {
+      bet.value = data;
     });
 
   ownerAddress.value = bet.value.owner?.punterAddress;
 }
 
-const betIsOpen = (status) => {
-  return status == "open";
-}
-
-const shouldShowJoinButton = (status) => {
-  return betIsOpen(status) && ownerAddress.value != account._value;
-}
-
-const betIsCancelable = (status) => {
-  return betIsOpen(status) && ownerAddress.value == account._value;
-}
-
-const betIsContested = (status) => {
-  return status == "contested";
-}
-
-const betIsChallenged = (status) => {
-  return status == "challenged";
+function cancelBet() {
+  blockBetService.cancelBet(uuid, bet.value.owner?.punterAddress).then(data => {
+    console.log(data);
+  });
 }
 </script>
 

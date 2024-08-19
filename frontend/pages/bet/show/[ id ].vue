@@ -6,14 +6,14 @@
     </div>
     <Navbar />
     <BetPanel 
-      :id=id
+      :uuid=uuid
     />
     <Footer />
   </template>
   
   <script setup>
     const route = useRoute();
-    const id = Number(route.params.id);
+    const uuid = route.params.id;
   </script>
   
   <style scoped>

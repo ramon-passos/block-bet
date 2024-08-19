@@ -7,30 +7,29 @@ export class BlockBetService {
     this.baseUrl = 'http://localhost:8080';
     this.web3 = new Web3("http://localhost:8545");
     this.abi = abi;
-    this.contractAddress = '0xcb4faf51b2d926586857218257a135d47364ed04';
+    this.contractAddress = '0x613b7e806dd8930753b5f152b3e5ef7f20e51703';
     this.contract = new this.web3.eth.Contract(this.abi, this.contractAddress);
   }
 
   async getBets(filters) {
     const bets = await this.contract.methods.getBets().call()
     const parsedBets = bets.map(parseBet);
+    const isFilterEmpty = filters === undefined;
 
-    if (filters.length === 0) return parsedBets;
-    
+    if (isFilterEmpty) return parsedBets;
+
     const result = parsedBets.filter(bet => {
-      console.log(bet.status);
-      console.log(filters)
-      return filters.includes(bet.satus);
+      return filters.includes(bet.status);
     });
 
     return result;
   }
 
-  async getBet(id) {
-    const url = `${this.baseUrl}/bets?id=${id}`;
-    const result = await fetch(url);
+  async getBet(uuid) {
+    const bet = await this.contract.methods.getBet(uuid).call();
+    const parsedBet = parseBet(bet);
 
-    return result;
+    return parsedBet;
   }
 
   async createBet(betData, account) {
@@ -60,11 +59,15 @@ export class BlockBetService {
     return data;
   }
 
+  async cancelBet(uuid, account) {
+    const result = await this.contract.methods.cancelBet(uuid).send({ from: account });
+
+    return result
+  }
+
   // async function challengeBet() {}
 
   // async function voteWinner() {}
-
-  // async function cancelBet() {}
 
   // async function auditBet() {}
 

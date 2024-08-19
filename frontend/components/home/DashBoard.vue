@@ -6,35 +6,35 @@
         @filterUnselected="removeFilter"
         filterText="ABERTAS"
         filterType="status"
-        filter="open"
+        filter="OPEN"
       />
       <HomeFilter
         @filterSelected="handleFilter"
         @filterUnselected="removeFilter"
         filterText="DESAFIADAS"
         filterType="status"
-        filter="challenged"
+        filter="CHALLENGED"
       />
       <HomeFilter
         @filterSelected="handleFilter"
         @filterUnselected="removeFilter"
         filterText="CONTESTADAS"
         filterType="status"
-        filter="contested"
+        filter="CONTESTED"
       />
       <HomeFilter
         @filterSelected="handleFilter"
         @filterUnselected="removeFilter"
         filterText="FINALIZADAS"
         filterType="status"
-        filter="finished"
+        filter="FINISHED"
       />
       <HomeFilter
         @filterSelected="handleFilter"
         @filterUnselected="removeFilter"
         filterText="INVÁLIDAS"
         filterType="status"
-        filter="invalid"
+        filter="INVALID"
       />
     </div>
   </div>
@@ -93,7 +93,7 @@ watch(
 );
 
 function fetchData() {
-  blockBetService.getBets(Object.entries(filters.value))
+  blockBetService.getBets(filters.value.status)
     .then(data => {
       bets.value = data;
       setDataPerPage();
@@ -124,7 +124,7 @@ function startPolling() {
       console.log("Polling... API not available yet");
       fetchData();
     }
-  }, 2000);
+  }, 500);
 }
 
 function handleFilter(key, value) {

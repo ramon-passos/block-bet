@@ -1,5 +1,5 @@
 <template>
-  <section class="bet" @click="showBet(betData.id)">
+  <section class="bet" @click="showBet(betData.uuid)">
     <div class="col">
       <div class="row bet-title">
         <p>
@@ -37,8 +37,8 @@ const props = defineProps({
   }
 });
 
-function showBet(id) {
-  router.push(`/bet/show/${id}`);
+function showBet(uuid) {
+  router.push(`/bet/show/${uuid}`);
 };
 </script>
 
