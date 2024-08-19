@@ -67,6 +67,7 @@
 import { BlockBetService } from "@/services/BlockBetService";
 import { StatusEnum } from "@/constants/statusEnum";
 import Web3 from "web3";
+import { injected } from "~/connectors";
 
 const blockBetService = new BlockBetService();
 const bet = ref({});
@@ -79,8 +80,9 @@ const props = defineProps({
 });
 
 const { uuid } = props;
-const { account } = useWeb3();
-const ownerAddress = ref("");
+const { account, activate } = useWeb3();
+useEagerConnect();
+await activate(injected);
 
 onMounted(() => {
   getBet();
@@ -91,11 +93,13 @@ const betIsOpen = (status) => {
 }
 
 const shouldShowJoinButton = (status) => {
-  return betIsOpen(status) && ownerAddress.value !== account.value;
+  const ownerAddress = bet.value.owner?.punterAddress
+  return betIsOpen(status) && ownerAddress !== account.value;
 }
 
 const betIsCancelable = (status) => {
-  return betIsOpen(status) && ownerAddress.value === account.value;
+  const ownerAddress = bet.value.owner?.punterAddress
+  return betIsOpen(status) && ownerAddress === account.value;
 }
 
 const betIsContested = (status) => {
@@ -116,8 +120,6 @@ function getBet() {
     .then(data => {
       bet.value = data;
     });
-
-  ownerAddress.value = bet.value.owner?.punterAddress;
 }
 
 function cancelBet() {
