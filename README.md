@@ -56,7 +56,7 @@ Pegue o uuid da aposta e armazene em uma constante:
 Para desafiar uma aposta, chame a função `challengeBet`:
 
 ```
-contract.challengeBet(uuid, 2, {from: accounts[1]})
+contract.challengeBet(uuid, {from: accounts[1], value: 100})
 ```
 
 Para votar no vencedor de uma aposta, chame a função `voteWinner`:
