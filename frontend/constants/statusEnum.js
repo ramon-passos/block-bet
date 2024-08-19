@@ -1,7 +1,7 @@
 export const StatusEnum = {
-  open: "ABERTA",
-  finished: "FINALIZADA",
-  contested: "CONTESTADA",
-  challenged: "DESAFIADA",
-  invalid: "INVÁLIDA",
+  OPEN: "ABERTA",
+  FINISHED: "FINALIZADA",
+  CONTESTED: "CONTESTADA",
+  CHALLENGED: "DESAFIADA",
+  INVALID: "INVÁLIDA",
 };

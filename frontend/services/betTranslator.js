@@ -14,7 +14,7 @@ export function parseBet(bet) {
 
 function parsePunter(punter) {
   return {
-    punterAddress: punter.PunterAddress,
+    punterAddress: punter.punterAddress,
     decision: parseDecision(punter.decision),
     winnerVote: parseWinnerVote(punter.winnerVote),
   }

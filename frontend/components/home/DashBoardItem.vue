@@ -3,15 +3,10 @@
     <div class="col">
       <div class="row bet-title">
         <p>
-          Titulo Aposta
+          # {{ ethValue(betData.value) }} ETH
         </p>
       </div>
       <div class="row bet-data">
-        <div class="col data-field" id="id-col">
-          <p>
-            {{ betData.id }}
-          </p>
-        </div>
         <div class="col data-field" id="desc-col">
           <p>
             {{ betData.description }}
@@ -30,7 +25,9 @@
 
 <script setup>
 import { StatusEnum } from "@/constants/statusEnum";
+import Web3 from "web3";
 
+const ethValue = (value) => Web3.utils.fromWei(value, "ether");
 const router = useRouter();
 
 const props = defineProps({

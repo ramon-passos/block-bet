@@ -69,6 +69,64 @@ const totalPages = computed(() => Math.ceil(bets.value.length / itemsPerPage));
 
 const calculateOffset = (page) => (page - 1) * itemsPerPage;
 
+onMounted(() => {
+  const isAvailable = bets.value.length > 0;
+  if (!isAvailable) {
+    startPolling();
+  }
+});
+
+watch(
+  filters,
+  () => {
+    currentPage.value = 1;
+    fetchData();
+  },
+  { deep: true }
+);
+
+watch(
+  currentPage,
+  () => {
+    setDataPerPage();
+  }
+);
+
+function fetchData() {
+  blockBetService.getBets(Object.entries(filters.value))
+    .then(data => {
+      bets.value = data;
+      setDataPerPage();
+    })
+}
+
+function setDataPerPage() {
+  const offset = calculateOffset(currentPage.value);
+  betsPerPage.value = bets.value.slice(offset, offset + itemsPerPage);
+}
+
+function handlePageData(page) {
+  currentPage.value = page;
+  scrollToTop();
+  setDataPerPage();
+}
+
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
+function startPolling() {
+  const interval = setInterval(() => {
+    const isAvailable = bets.value.length > 0;
+    if (isAvailable) {
+      clearInterval(interval);
+    } else {
+      console.log("Polling... API not available yet");
+      fetchData();
+    }
+  }, 2000);
+}
+
 function handleFilter(key, value) {
   if (!filters.value[key]) {
     filters.value[key] = [];
@@ -90,73 +148,6 @@ function removeFilter(key, value) {
     }
   }
 }
-
-async function fetchData() {
-  const response = await blockBetService.getBets(Object.entries(filters.value));
-  const data = await response.json();
-  bets.value = data;
-  setDataPerPage();
-}
-
-function setDataPerPage() {
-  const offset = calculateOffset(currentPage.value);
-  betsPerPage.value = bets.value.slice(offset, offset + itemsPerPage);
-}
-
-function handlePageData(page) {
-  currentPage.value = page;
-  scrollToTop();
-  setDataPerPage();
-}
-
-const scrollToTop = () => {
-  window.scrollTo({ top: 0, behavior: "smooth" });
-};
-
-async function checkApiStatus() {
-  try {
-    const response = await fetch('http://localhost:8080/bets');
-    if (response.ok) {
-      await fetchData();
-      return true;
-    }
-  } catch (error) {
-    console.log('API ainda não está disponível. Tentando novamente...');
-    return false;
-  }
-}
-
-function startPolling() {
-  const interval = setInterval(async () => {
-    const isAvailable = await checkApiStatus();
-    if (isAvailable) {
-      clearInterval(interval);
-    }
-  }, 5000);
-}
-
-onMounted(async () => {
-  const isAvailable = await checkApiStatus();
-  if (!isAvailable) {
-    startPolling();
-  }
-});
-
-watch(
-  filters,
-  () => {
-    currentPage.value = 1;
-    fetchData();
-  },
-  { deep: true }
-);
-
-watch(
-  currentPage,
-  () => {
-    setDataPerPage();
-  }
-);
 </script>
 
 <style scoped>

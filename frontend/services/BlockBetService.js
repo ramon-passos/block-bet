@@ -1,27 +1,27 @@
 import Web3 from "web3";
+import { abi } from "@/contract/abi";
+import { parseBet } from "./betTranslator";
 
 export class BlockBetService {
   constructor() {
     this.baseUrl = 'http://localhost:8080';
     this.web3 = new Web3("http://localhost:8545");
-    this.abi = this._getAbi();
-    this.contractAddress = '0xacb42380cf2523ba70d34e6b941ecbdf5e270083';
+    this.abi = abi;
+    this.contractAddress = '0x613b7e806dd8930753b5f152b3e5ef7f20e51703';
     this.contract = new this.web3.eth.Contract(this.abi, this.contractAddress);
   }
 
   async getBets(filters) {
-    let url = `${this.baseUrl}/bets`;
-    const params = new URLSearchParams();
+    const bets = await this.contract.methods.getBets().call()
+    const parsedBets = bets.map(parseBet);
 
-    filters.forEach(([key, values]) => {
-      values.forEach((value) => params.append(key, value));
-    })
-
-    if (params.toString()) {
-      url += `?${params.toString()}`;
-    }
-
-    const result = await fetch(url);
+    if (filters.length === 0) return parsedBets;
+    
+    const result = parsedBets.filter(bet => {
+      console.log(bet.status);
+      console.log(filters)
+      return filters.includes(bet.satus);
+    });
 
     return result;
   }
@@ -32,7 +32,7 @@ export class BlockBetService {
 
     return result;
   }
-  
+
   async createBet(betData, account) {
     const { description, value, valueType, decision } = betData;
     const translatedValue = this._translate_value(value, valueType);
@@ -64,11 +64,13 @@ export class BlockBetService {
 
   // async function voteWinner() {}
 
-  // async function finalizeBet() {}
-
-  // async function constestBet() {}
+  // async function cancelBet() {}
 
   // async function auditBet() {}
+
+  translate_value(value, valueType) {
+    return this.web3.utils.toWei(value.toString(), valueType);
+  }
 
   _getAbi() {
     return [];
@@ -76,9 +78,5 @@ export class BlockBetService {
 
   _translate_decision(decision) {
     return decision ? 1 : 0;
-  }
-
-  _translate_value(value, valueType) {
-    return this.web3.utils.toWei(value.toString(), valueType);
   }
 }
