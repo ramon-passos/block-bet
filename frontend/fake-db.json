@@ -1,164 +1,254 @@
 {
   "bets": [
     {
-      "id": 1,
-      "uuid": "a1b2c3d4-e5f6-7g8h-9i10-j11k12l13m14",
-      "value": 100.0,
-      "description": "Bet on Team A to win the championship",
-      "result": "pending",
+      "id": "1",
+      "uuid": "b5bda5e1-3d6c-4e62-8f82-b1297e77fa25",
+      "timestamp": 1692345600,
+      "value": 1000,
+      "description": "Aposta sobre o resultado de um jogo de futebol",
+      "result": "0x0000000000000000000000000000000000000000",
+      "oracles": [
+        {
+          "oracleAddress": "0x0000000000000000000000000000000000000001",
+          "oracleDecision": "UNDEFINED"
+        }
+      ],
       "owner": {
-        "name": "User1",
-        "id": 101
+        "punterAddress": "0x0000000000000000000000000000000000000001",
+        "decision": "TRUE",
+        "winnerVote": "OWNER"
       },
       "challenger": {
-        "name": "User2",
-        "id": 102
-      },
-      "status": "invalid"
-    },
-    {
-      "id": 2,
-      "uuid": "n15o16p17-q18r19s20-t21u22v23w24",
-      "value": 150.0,
-      "description": "Bet on Player X to score the first goal",
-      "result": "pending",
-      "owner": {
-        "name": "User3",
-        "id": 103
-      },
-      "challenger": {
-        "name": "User4",
-        "id": 104
-      },
-      "status": "challenged"
-    },
-    {
-      "id": 3,
-      "uuid": "x25y26z27-a28b29c30-d31e32f33g34",
-      "value": 200.0,
-      "description": "Bet on Team B to win by more than 3 points",
-      "result": "pending",
-      "owner": {
-        "name": "User5",
-        "id": 105
-      },
-      "challenger": {
-        "name": "User6",
-        "id": 106
-      },
-      "status": "contested"
-    },
-    {
-      "id": 4,
-      "uuid": "h35i36j37-k38l39m40-n41o42p43q44",
-      "value": 120.0,
-      "description": "Bet on the match ending in a draw",
-      "result": "pending",
-      "owner": {
-        "name": "User7",
-        "id": 107
-      },
-      "challenger": {
-        "name": "User8",
-        "id": 108
-      },
-      "status": "finished"
-    },
-    {
-      "id": 5,
-      "uuid": "r45s46t47-u48v49w50-x51y52z53a54",
-      "value": 250.0,
-      "description": "Bet on Player Y to be the top scorer",
-      "result": "pending",
-      "owner": {
-        "name": "User9",
-        "id": 109
-      },
-      "challenger": {
-        "name": "User10",
-        "id": 110
+        "punterAddress": "0x0000000000000000000000000000000000000002",
+        "decision": "FALSE",
+        "winnerVote": "CHALLENGER"
       },
       "status": "open"
     },
     {
-      "id": 6,
-      "uuid": "b55c56d57-e58f59g60-h61i62j63k64",
-      "value": 300.0,
-      "description": "Bet on Team C to concede first",
-      "result": "pending",
+      "id": "2",
+      "uuid": "ac7f01a9-6e4e-4d93-9b34-e10c8fa9e4f0",
+      "timestamp": 1692348600,
+      "value": 2000,
+      "description": "Aposta sobre a eleição presidencial",
+      "result": "0x0000000000000000000000000000000000000000",
+      "oracles": [
+        {
+          "oracleAddress": "0x0000000000000000000000000000000000000003",
+          "oracleDecision": "OWNER"
+        }
+      ],
       "owner": {
-        "name": "User11",
-        "id": 111
+        "punterAddress": "0x0000000000000000000000000000000000000003",
+        "decision": "FALSE",
+        "winnerVote": "OWNER"
       },
       "challenger": {
-        "name": "User12",
-        "id": 112
+        "punterAddress": "0x0000000000000000000000000000000000000004",
+        "decision": "TRUE",
+        "winnerVote": "CHALLENGER"
       },
-      "status": "invalid"
+      "status": "challenged"
     },
     {
-      "id": 7,
-      "uuid": "l65m66n67-o68p69q70-r71s72t73u74",
-      "value": 180.0,
-      "description": "Bet on the match having over 2.5 goals",
-      "result": "pending",
+      "id": "3",
+      "uuid": "d6e707b4-9532-4fa7-83c2-37e1d146b836",
+      "timestamp": 1692351600,
+      "value": 1500,
+      "description": "Aposta sobre o vencedor do campeonato de tênis",
+      "result": "0x0000000000000000000000000000000000000000",
+      "oracles": [
+        {
+          "oracleAddress": "0x0000000000000000000000000000000000000005",
+          "oracleDecision": "CHALLENGER"
+        }
+      ],
       "owner": {
-        "name": "User13",
-        "id": 113
+        "punterAddress": "0x0000000000000000000000000000000000000005",
+        "decision": "TRUE",
+        "winnerVote": "OWNER"
       },
       "challenger": {
-        "name": "User14",
-        "id": 114
-      },
-      "status": "contested"
-    },
-    {
-      "id": 8,
-      "uuid": "v75w76x77-y78z79a80-b81c82d83e84",
-      "value": 220.0,
-      "description": "Bet on Team D to win both halves",
-      "result": "pending",
-      "owner": {
-        "name": "User15",
-        "id": 115
-      },
-      "challenger": {
-        "name": "User16",
-        "id": 116
+        "punterAddress": "0x0000000000000000000000000000000000000006",
+        "decision": "FALSE",
+        "winnerVote": "CHALLENGER"
       },
       "status": "finished"
     },
     {
-      "id": 9,
-      "uuid": "f85g86h87-i88j89k90-l91m92n93o94",
-      "value": 140.0,
-      "description": "Bet on Player Z to be sent off",
-      "result": "pending",
+      "id": "4",
+      "uuid": "f9c49c90-5141-42d1-8b57-cb3a8b8d7dd2",
+      "timestamp": 1692354600,
+      "value": 500,
+      "description": "Aposta sobre o número de gols em um jogo de futebol",
+      "result": "0x0000000000000000000000000000000000000000",
+      "oracles": [
+        {
+          "oracleAddress": "0x0000000000000000000000000000000000000007",
+          "oracleDecision": "INVALID"
+        }
+      ],
       "owner": {
-        "name": "User17",
-        "id": 117
+        "punterAddress": "0x0000000000000000000000000000000000000007",
+        "decision": "TRUE",
+        "winnerVote": "OWNER"
       },
       "challenger": {
-        "name": "User18",
-        "id": 118
+        "punterAddress": "0x0000000000000000000000000000000000000008",
+        "decision": "FALSE",
+        "winnerVote": "CHALLENGER"
+      },
+      "status": "invalid"
+    },
+    {
+      "id": "5",
+      "uuid": "08a2370d-5b92-4fb1-a2a3-33f66ebd6589",
+      "timestamp": 1692357600,
+      "value": 3000,
+      "description": "Aposta sobre o resultado de um jogo de basquete",
+      "result": "0x0000000000000000000000000000000000000000",
+      "oracles": [
+        {
+          "oracleAddress": "0x0000000000000000000000000000000000000009",
+          "oracleDecision": "UNDEFINED"
+        }
+      ],
+      "owner": {
+        "punterAddress": "0x0000000000000000000000000000000000000009",
+        "decision": "FALSE",
+        "winnerVote": "OWNER"
+      },
+      "challenger": {
+        "punterAddress": "0x0000000000000000000000000000000000000010",
+        "decision": "TRUE",
+        "winnerVote": "CHALLENGER"
+      },
+      "status": "contested"
+    },
+    {
+      "id": "6",
+      "uuid": "d8a5f62f-73fc-487b-9f88-0b13f7d64c7f",
+      "timestamp": 1692360600,
+      "value": 2500,
+      "description": "Aposta sobre o resultado de um debate político",
+      "result": "0x0000000000000000000000000000000000000000",
+      "oracles": [
+        {
+          "oracleAddress": "0x0000000000000000000000000000000000000011",
+          "oracleDecision": "OWNER"
+        }
+      ],
+      "owner": {
+        "punterAddress": "0x0000000000000000000000000000000000000011",
+        "decision": "TRUE",
+        "winnerVote": "OWNER"
+      },
+      "challenger": {
+        "punterAddress": "0x0000000000000000000000000000000000000012",
+        "decision": "FALSE",
+        "winnerVote": "CHALLENGER"
       },
       "status": "open"
     },
     {
-      "id": 10,
-      "uuid": "p95q96r97-s98t99u100-v101w102x103",
-      "value": 160.0,
-      "description": "Bet on Team E to win the league",
-      "result": "pending",
+      "id": "7",
+      "uuid": "e1a41a6c-9959-4f9c-bb0c-df3f1d8e06fb",
+      "timestamp": 1692363600,
+      "value": 1200,
+      "description": "Aposta sobre o vencedor de um torneio de pôquer",
+      "result": "0x0000000000000000000000000000000000000000",
+      "oracles": [
+        {
+          "oracleAddress": "0x0000000000000000000000000000000000000013",
+          "oracleDecision": "CHALLENGER"
+        }
+      ],
       "owner": {
-        "name": "User19",
-        "id": 119
+        "punterAddress": "0x0000000000000000000000000000000000000013",
+        "decision": "FALSE",
+        "winnerVote": "OWNER"
       },
       "challenger": {
-        "name": "User20",
-        "id": 120
+        "punterAddress": "0x0000000000000000000000000000000000000014",
+        "decision": "TRUE",
+        "winnerVote": "CHALLENGER"
       },
       "status": "challenged"
+    },
+    {
+      "id": "8",
+      "uuid": "bfea42ea-7510-45cc-9c7a-13e0b8fba6d9",
+      "timestamp": 1692366600,
+      "value": 900,
+      "description": "Aposta sobre a previsão do tempo",
+      "result": "0x0000000000000000000000000000000000000000",
+      "oracles": [
+        {
+          "oracleAddress": "0x0000000000000000000000000000000000000015",
+          "oracleDecision": "UNDEFINED"
+        }
+      ],
+      "owner": {
+        "punterAddress": "0x0000000000000000000000000000000000000015",
+        "decision": "TRUE",
+        "winnerVote": "OWNER"
+      },
+      "challenger": {
+        "punterAddress": "0x0000000000000000000000000000000000000016",
+        "decision": "FALSE",
+        "winnerVote": "CHALLENGER"
+      },
+      "status": "finished"
+    },
+    {
+      "id": "9",
+      "uuid": "c32a0f0f-61c0-4d8d-8c5b-10f938564da3",
+      "timestamp": 1692369600,
+      "value": 1700,
+      "description": "Aposta sobre a duração de uma corrida de carros",
+      "result": "0x0000000000000000000000000000000000000000",
+      "oracles": [
+        {
+          "oracleAddress": "0x0000000000000000000000000000000000000017",
+          "oracleDecision": "OWNER"
+        }
+      ],
+      "owner": {
+        "punterAddress": "0x0000000000000000000000000000000000000017",
+        "decision": "TRUE",
+        "winnerVote": "OWNER"
+      },
+      "challenger": {
+        "punterAddress": "0x0000000000000000000000000000000000000018",
+        "decision": "FALSE",
+        "winnerVote": "CHALLENGER"
+      },
+      "status": "contested"
+    },
+    {
+      "id": "10",
+      "uuid": "b9fc04e4-d5e0-4d2c-a3b8-698f8b9c4fa1",
+      "timestamp": 1692372600,
+      "value": 400,
+      "description": "Aposta sobre o número de sets em uma partida de tênis",
+      "result": "0x0000000000000000000000000000000000000000",
+      "oracles": [
+        {
+          "oracleAddress": "0x0000000000000000000000000000000000000019",
+          "oracleDecision": "CHALLENGER"
+        }
+      ],
+      "owner": {
+        "punterAddress": "0x0000000000000000000000000000000000000019",
+        "decision": "FALSE",
+        "winnerVote": "OWNER"
+      },
+      "challenger": {
+        "punterAddress": "0x0000000000000000000000000000000000000020",
+        "decision": "TRUE",
+        "winnerVote": "CHALLENGER"
+      },
+      "status": "invalid"
     }
   ]
 }
