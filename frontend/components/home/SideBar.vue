@@ -60,23 +60,23 @@
 }
 
 h2 {
-  color: white;
-  font-size: 18px;
-  font-weight: 600;
+  color: #1b1b1b;
+  font-size: 24px;
+  font-weight: 800;
   padding-bottom: 10px;
 }
 
 p {
-  color: white;
-  font-size: 17px;
-  text-decoration: underline;
+  color: #1b1b1b;
+  font-size: 19px;
+  font-weight: 600;
 }
 
 hr {
   width: 80%;
   border: none;
-  height: 1px;
-  background-color: rgb(31, 150, 255);
+  height: 2px;
+  background: linear-gradient(to right, rgb(31, 150, 255), blueviolet, rgb(226, 14, 208));
 }
 
 .row {

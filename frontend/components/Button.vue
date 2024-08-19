@@ -19,7 +19,7 @@ const props = defineProps({
 <style scoped>
 button {
   background-color: blueviolet;
-  border: 1px solid white;
+  border: 1px solid rgb(59, 59, 59);
   border-radius: 10px;
   font-size: 20px;
   color: white;
@@ -29,7 +29,7 @@ button {
 
 button:hover {
   background-color: white;
-  color: black;
+  color: blueviolet;
   border-color: black;
   transform: scale(1.05);
   cursor: pointer;

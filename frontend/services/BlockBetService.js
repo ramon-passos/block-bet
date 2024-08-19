@@ -7,7 +7,7 @@ export class BlockBetService {
     this.baseUrl = 'http://localhost:8080';
     this.web3 = new Web3("http://localhost:8545");
     this.abi = abi;
-    this.contractAddress = '0x613b7e806dd8930753b5f152b3e5ef7f20e51703';
+    this.contractAddress = '0xcb4faf51b2d926586857218257a135d47364ed04';
     this.contract = new this.web3.eth.Contract(this.abi, this.contractAddress);
   }
 
@@ -35,7 +35,7 @@ export class BlockBetService {
 
   async createBet(betData, account) {
     const { description, value, valueType, decision } = betData;
-    const translatedValue = this._translate_value(value, valueType);
+    const translatedValue = this.translate_value(value, valueType);
     const call = this.contract.methods.createBet(this._translate_decision(decision), description)
     const data = await call.encodeABI();
     const gasEstimate = await call.estimateGas({ from: account, value: translatedValue })

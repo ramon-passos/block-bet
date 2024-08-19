@@ -74,12 +74,14 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  border-bottom: 2px solid blueviolet;
+  border-image: linear-gradient(to right, rgb(31, 150, 255), blueviolet, rgb(226, 14, 208));
+  border-bottom: 2px solid white;
   padding-bottom: 5px;
   transition: 0.2s ease;
 }
 
 #link:hover {
-  color: blueviolet;
+  color: rgb(31, 150, 255);
+  border-bottom: 2px solid rgb(31, 150, 255);
 }
 </style>

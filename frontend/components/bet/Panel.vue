@@ -8,7 +8,13 @@
               <h1>Aposta #{{ bet.id }}</h1>
             </div>
             <div class="row" id="bet-subtitle">
-              <h3>{{ bet.uuid }}</h3>
+              <div class="col">
+                <h3>{{ bet.uuid }}</h3>
+                <div class="row">
+                  <p>Criada por:&nbsp;</p>
+                  <p>{{ bet.owner?.punterAddress }}</p>
+                </div>
+              </div>
             </div>
           </div>
           <div class="col" id="status-col">
@@ -17,7 +23,13 @@
         </div>
         <div class="row">
           <div class="col" id="desc-col">
-            <p>{{ bet.description }}</p>
+            <div class="row">
+              <p>{{ bet.description }}</p>
+            </div>
+            <div class="row">
+              <p>Decisão do criador:&nbsp;</p>
+              <p>{{ bet.owner?.decision }}</p>
+            </div>
           </div>
           <div class="col" id="value-col">
             <div class="row">
@@ -28,8 +40,21 @@
             </div>
           </div>
         </div>
-        <div class="row" id="join-bet-row" v-if="betIsOpen(bet.status)">
-          <Button id="join-bet-id" buttonText="Entrar na aposta" />
+        <div class="row bet-option" id="join-bet" v-show="shouldShowJoinButton(bet.status)">
+          <Button buttonText="Entrar na aposta">
+          </Button>
+        </div>
+        <div class="row bet-option" id="cancel-bet" v-show="betIsCancelable(bet.status)">
+          <Button buttonText="Cancelar minha aposta">
+          </Button>
+        </div>
+        <div class="row bet-option" id="audit-bet" v-show="betIsContested(bet.status)">
+          <Button buttonText="Auditar aposta">
+          </Button>
+        </div>
+        <div class="row bet-option" id="decide-bet-answer" v-show="betIsChallenged(bet.status)">
+          <Button buttonText="Dar minha decisão">
+          </Button>
         </div>
       </div>
     </section>
@@ -51,25 +76,42 @@ const props = defineProps({
 });
 
 const { id } = props;
+const { account } = useWeb3();
+const ownerAddress = ref("");
 
 onMounted(() => {
   getBet();
 });
 
-function getBet() {
+const getBet = () => {
   blockBetService
     .getBet(id)
     .then((response) => response.json())
     .then((data) => {
       bet.value = data[0];
     });
+
+  ownerAddress.value = bet.value.owner?.punterAddress;
 }
 
-function betIsOpen(status) {
-  if (status == "open") {
-    return true;
-  }
-  return false;
+const betIsOpen = (status) => {
+  return status == "open";
+}
+
+const shouldShowJoinButton = (status) => {
+  return betIsOpen(status) && ownerAddress.value != account._value;
+}
+
+const betIsCancelable = (status) => {
+  return betIsOpen(status) && ownerAddress.value == account._value;
+}
+
+const betIsContested = (status) => {
+  return status == "contested";
+}
+
+const betIsChallenged = (status) => {
+  return status == "challenged";
 }
 </script>
 
@@ -130,7 +172,7 @@ function betIsOpen(status) {
   align-self: center;
 }
 
-#join-bet-row {
+.bet-option {
   padding: 30px 20px 0px 0px;
   justify-content: end;
 }

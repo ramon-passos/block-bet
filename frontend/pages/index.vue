@@ -69,11 +69,16 @@ const closeModal = () => {
 
 <style scoped>
 body {
-  background-color: #262626;
+  background-color: #1b1b1b;
+}
+
+.sidebar {
+  color: #1b1b1b;
+  background-color: rgb(231, 230, 233);
 }
 
 .main-section {
-  background-color: white;
+  background-color: #1b1b1b;
   display: grid;
   justify-content: center;
   padding: 0px 200px;
@@ -85,6 +90,7 @@ body {
 }
 
 .main-section h1 {
+  color: rgb(240, 240, 240);
   font-size: 36px;
   font-weight: 400;
   padding-top: 50px;

@@ -28,8 +28,8 @@ const emit = defineEmits(["filterSelected", "filterUnselected"])
 
 const isActive = ref(false)
 
-const backgroundColor = computed(() => isActive.value ? "rgb(226, 14, 208)" : "white")
-const color = computed(() => isActive.value ? "white" : "rgb(226, 14, 208)")
+const backgroundColor = computed(() => isActive.value ? "rgb(226, 14, 208)" : "rgb(233, 240, 238)")
+const color = computed(() => isActive.value ? "rgb(233, 240, 238)" : "rgb(59, 59, 59)")
 
 function applyFilter() {
   isActive.value = !isActive.value
@@ -43,18 +43,18 @@ function applyFilter() {
 
 <style scoped>
 .bet-filter {
-  background-color: white;
-  color: rgb(226, 14, 208);
-  border: 2px solid rgb(226, 14, 208);
+  border: 1px solid white;
   border-radius: 10px;
   padding: 5px 10px;
   font-size: 13px;
   margin-right: 20px;
+  transition: transform 0.3s ease;
 }
 
 .bet-filter:hover {
   background-color: rgb(226, 14, 208);
   color: white;
   cursor: pointer;
+  transform: scale(1.02);
 }
 </style>

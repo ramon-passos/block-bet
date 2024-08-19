@@ -21,10 +21,10 @@ const props = defineProps({
 });
 
 const backgroundColor = computed(() =>
-  props.page === props.currentPage ? "rgb(31, 150, 255)" : "white"
+  props.page === props.currentPage ? "white" : "rgb(59, 59, 59)"
 );
 const color = computed(() =>
-  props.page === props.currentPage ? "white" : "rgb(31, 150, 255)"
+  props.page === props.currentPage ? "rgb(59, 59, 59)" : "white"
 );
 
 const emit = defineEmits(["changeCurrentPage"]);
@@ -36,13 +36,14 @@ function emitPageChange() {
 
 <style>
 .number {
+  background-color: rgb(59, 59, 59);
   font-weight: 500;
   width: 40px;
   height: 40px;
   display: flex;
   justify-content: center;
   align-content: center;
-  border: 1px solid rgb(31, 150, 255);
+  border: 1px solid white;
   border-radius: 50%;
   transition: background-color 0.3s ease;
 }

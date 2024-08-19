@@ -139,7 +139,7 @@
         }
       ],
       "owner": {
-        "punterAddress": "0x0000000000000000000000000000000000000011",
+        "punterAddress": "0x8ee3bd5161260bC84f84901CDd4bc48F9a7a4eE0",
         "decision": "TRUE",
         "winnerVote": "OWNER"
       },

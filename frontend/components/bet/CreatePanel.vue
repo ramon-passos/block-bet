@@ -188,7 +188,7 @@ function createBet() {
 }
 
 .bet-wrapper {
-  background-color: white;
+  background-color: #1b1b1b;
   display: flex;
   justify-content: center;
   flex-direction: column;

@@ -44,9 +44,11 @@ function showBet(id) {
 
 <style scoped>
 .bet {
-  background-color: rgb(233, 240, 238);
+  color: white;
+  background-color: rgb(59, 59, 59);
   padding: 15px 20px;
-  margin: 30px 0px;
+  margin: 30px auto;
+  width: 80%;
   border: 0 solid white;
   border-radius: 15px;
   transition: background-color 0.3s ease, transform 0.3s ease;
@@ -60,7 +62,7 @@ function showBet(id) {
 .bet-title {
   font-size: clamp(16px, 4vw, 24px);
   font-weight: bold;
-  padding-bottom: 5px;
+  padding-bottom: 20px;
 }
 
 .bet-data {
@@ -84,7 +86,7 @@ function showBet(id) {
 hr {
   border: none;
   height: 1px;
-  background: linear-gradient(to right, rgb(31, 150, 255), rgb(187, 0, 255), rgb(226, 14, 208));
+  background: linear-gradient(to right, rgb(31, 150, 255), blueviolet, rgb(226, 14, 208));
   width: 80%;
   margin: auto;
 }
