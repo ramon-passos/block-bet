@@ -152,14 +152,16 @@ function removeFilter(key, value) {
 
 <style scoped>
 .sub-header {
+  display: flex;
+  justify-content: center;
+  width: 60%;
   margin-top: 20px;
-  margin-left: 20px;
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .dashboard-panel {
   justify-content: center;
-  padding: 30px 0px;
+  padding: 0px 0px 30px 0px;
   box-sizing: border-box;
 }
 

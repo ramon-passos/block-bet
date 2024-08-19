@@ -44,6 +44,7 @@ function showBet(uuid) {
 
 <style scoped>
 .bet {
+  width: 80%;
   color: white;
   background-color: rgb(59, 59, 59);
   padding: 15px 20px;

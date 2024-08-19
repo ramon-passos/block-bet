@@ -77,8 +77,8 @@ body {
 }
 
 .main-section {
+  justify-content: center;
   background-color: #1b1b1b;
-  padding: 0px 400px;
   flex: 5;
 }
 
@@ -103,7 +103,7 @@ body {
 }
 
 .main-section-subheader {
-  width: 100%;
+  width: 80%;
   justify-content: space-between;
   align-items: end;
 }

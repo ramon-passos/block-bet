@@ -9,6 +9,7 @@
 
 <style scoped>
 .loader-section {
+  margin-top: 200px;
   display: flex;
   justify-content: center;
   align-items: center;
