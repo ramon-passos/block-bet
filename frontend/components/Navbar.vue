@@ -79,12 +79,12 @@ const props = defineProps({
   display: flex;
   align-items: center;
   gap: 4px;
-  width: 96px;
+  width: 122px;
 }
 
 .logo-wrapper p {
   color: white;
-  font-size: 30px;
+  font-size: 36px;
   font-weight: 400;
   font-family: 'Bebas Neue', sans-serif;
 }
