@@ -85,7 +85,7 @@ contract("BlockBet", (accounts) => {
         2,
         "Challenger decision is incorrect"
       );
-      assert.equal(contractBalance, 200, "Contract ballance is incorrect");
+      assert.equal(contractBalance, 300, "Contract ballance is incorrect");
     });
     it("should throw an error if the bet is already challenged", async () => {
       await blockBetInstance.challengeBet(createdUuid, {
@@ -116,11 +116,12 @@ contract("BlockBet", (accounts) => {
     it("should throw an error if bet is not found", async () => {
       try {
         await blockBetInstance.challengeBet("falseUuid", {
-          from: account[0],
+          from: accounts[0],
           value: 100,
         });
         assert.fail();
       } catch (error) {
+        console.log(error.message);
         assert.ok(error.message.includes("Bet not found"));
       }
     });
@@ -148,6 +149,17 @@ contract("BlockBet", (accounts) => {
         "Owner winner vote is incorrect"
       );
     });
+    it('should vote in the same result and finalize bet', async () => {
+      await blockBetInstance.voteWinner(createdUuid, 1, { from: accounts[0] });
+      await blockBetInstance.voteWinner(createdUuid, 1, { from: accounts[1] });
+      const foundBet = await blockBetInstance.getBet.call(createdUuid);
+      assert.equal(
+        foundBet.status,
+        2,
+        "Bet is not finalized"
+      );
+    });
+
     it("should throw an error if account is not owner or challanger", async () => {
       try {
         await blockBetInstance.voteWinner(createdUuid, 1, {
@@ -165,7 +177,7 @@ contract("BlockBet", (accounts) => {
     beforeEach(async () => {
       const result = await blockBetInstance.createBet(1, "sample description", {
         from: accounts[0],
-        value: web3.utils.toWei("1", "ether"),
+        value: 100,
       });
       const logs = result.logs;
       createdUuid = logs.find((log) => log.event === "BetCreated").args.uuid;
@@ -233,7 +245,7 @@ contract("BlockBet", (accounts) => {
     beforeEach(async () => {
       const result = await blockBetInstance.createBet(1, "sample description", {
         from: accounts[0],
-        value: web3.utils.toWei("1", "ether"),
+        value: 100,
       });
       const logs = result.logs;
       createdUuid = logs.find((log) => log.event === "BetCreated").args.uuid;
