@@ -91,7 +91,16 @@ export class BlockBetService {
     return data;
   }
 
-  // async function voteWinner() {}
+  async voteWinner(uuid, account, winnerVote) {
+    console.log({account})
+
+    const translatedWinner = this._translate_winner_vote(winnerVote)
+    const call = this.contract.methods.voteWinner(uuid, translatedWinner);
+    const gasEstimate = await call.estimateGas({ from: account })
+    const result = await call.send({ from: account, gas: gasEstimate });
+
+    return result;
+  }
 
   // async function auditBet() {}
 
@@ -104,6 +113,17 @@ export class BlockBetService {
   }
 
   _translate_decision(decision) {
-    return decision ? 1 : 0;
+    return decision === "true" ? 1 : 2; 
+  }
+
+  _translate_winner_vote(vote) {
+    console.log("=============")
+    console.log({vote})
+    console.log("=============")
+    const translated = vote === "owner" ? 1 : 2;
+
+    console.log({translated})
+
+    return translated
   }
 }

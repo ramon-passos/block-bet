@@ -30,6 +30,14 @@
               <p>Decisão do criador:&nbsp;</p>
               <p>{{ bet.owner?.decision }}</p>
             </div>
+            <div class="row">
+              <p>Voto do criador:&nbsp;</p>
+              <p>{{ bet.owner?.winnerVote }}</p>
+            </div>
+            <div class="row">
+              <p>Voto do desafiante:&nbsp;</p>
+              <p>{{ bet.challenger?.winnerVote }}</p>
+            </div>
           </div>
           <div class="col" id="value-col">
             <div class="row">
@@ -56,8 +64,25 @@
           <Button buttonText="Auditar aposta">
           </Button>
         </div>
-        <div class="row bet-option" id="decide-bet-answer" v-show="betIsChallenged(bet.status)">
-          <Button buttonText="Dar minha decisão">
+        <div class="row bet-option" id="decide-bet-answer" v-show="showWinnerVote(bet.status)">
+          <div class="row">
+            <div class="col" id="decision-col">
+              <div class="row">
+                <p>Sua decisão:</p>
+              </div>
+              <div class="row">
+                <select v-model="selectedVote" name="" id="">
+                  <option disabled selected hidden>Escolha uma das opções</option>
+                  <option value="owner">Criador</option>
+                  <option value="challenger">Desafiante</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <Button buttonText="Confirmar Resultado"
+            :buttonFunction="voteWinner"
+          >
           </Button>
         </div>
       </div>
@@ -73,7 +98,7 @@ import { injected } from "~/connectors";
 
 const blockBetService = new BlockBetService();
 const bet = ref({});
-
+const selectedVote = ref("");
 const props = defineProps({
   uuid: {
     type: Number,
@@ -110,8 +135,12 @@ const betIsContested = (status) => {
   return status == "CONTESTED";
 }
 
-const betIsChallenged = (status) => {
-  return status == "CHALLENGED";
+const showWinnerVote = (status) => {
+  const ownerAddress = bet.value.owner?.punterAddress;
+  const challengerAddress = bet.value.challenger?.punterAddress;
+  const isPunter = ownerAddress === account.value || challengerAddress === account.value
+
+  return status == "CHALLENGED" && isPunter;
 }
 
 function ethValue(value) {
@@ -140,6 +169,10 @@ function challengeBet() {
   });
 
   router.push("/");
+}
+
+function voteWinner() {
+  blockBetService.voteWinner(uuid, account.value, selectedVote.value)
 }
 </script>
 
@@ -204,5 +237,9 @@ function challengeBet() {
 .bet-option {
   padding: 30px 20px 0px 0px;
   justify-content: end;
+}
+
+option {
+  color: black;
 }
 </style>

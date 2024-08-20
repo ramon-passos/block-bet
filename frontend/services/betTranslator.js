@@ -31,7 +31,7 @@ function parseDecision(decisionNumber) {
   const decisionMap = {
     0: "UNDEFINED",
     1: "TRUE",
-    1: "FALSE",
+    2: "FALSE",
   };
 
   return decisionMap[decisionNumber];
@@ -42,6 +42,7 @@ function parseWinnerVote(winnerVoteNumber) {
     0: "UNDEFINED",
     1: "OWNER",
     2: "CHALLENGER",
+    3: "INVALID",
   };
 
   return winnerVoteMap[winnerVoteNumber];
