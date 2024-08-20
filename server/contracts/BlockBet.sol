@@ -64,7 +64,7 @@ contract BlockBet {
             msg.sender != bet.owner.punterAddress,
             "Owner cannot challenge own bet"
         );
-        require(msg.value == bet.value, "Insufficient balance");
+        require(msg.value == bet.value, "Value sent does not match the bet value");
 
         DataTypes.Decision challengerDecision;
 
@@ -127,10 +127,12 @@ contract BlockBet {
             bets[index].challenger.winnerVote = winnerVote;
         }
 
+
+
         bool hasVoted = bets[index].owner.winnerVote !=
             DataTypes.WinnerVote.UNDEFINED &&
             bets[index].challenger.winnerVote != DataTypes.WinnerVote.UNDEFINED;
-        bool isContested = bet.owner.winnerVote != bet.challenger.winnerVote;
+        bool isContested = bets[index].owner.winnerVote != bets[index].challenger.winnerVote;
         if (hasVoted && !isContested) {
             finalizeBet(uuid);
         } else if (hasVoted && isContested) {
