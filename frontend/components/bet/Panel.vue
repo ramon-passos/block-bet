@@ -21,35 +21,44 @@
               </div>
             </div>
           </div>
-          <!-- Bet Status -->
-          <div class="col" id="status-col">
-            <p>{{ StatusEnum[bet.status] }}</p>
-          </div>
-        </div>
 
+          <div class="col">
+            <!-- Bet Status -->
+            <div class="row" id="status-row">
+              <p>{{ StatusEnum[bet.status] }}</p>
+            </div>
+            <div class="row" id="value-row">
+              <!-- Bet Value -->
+              <div class="col">
+                <div class="row">
+                  <h1>Valor:</h1>
+                </div>
+                <div class="row">
+                  {{ ethValue(bet.value) }} ETH
+                </div>
+              </div>
+            </div>
+           </div>
+        </div>
+        <hr>
         <!-- Bet Details -->
         <div class="row">
           <div class="col" id="desc-col">
             <div class="row">
-              <p>Decisão do criador:&nbsp;{{ bet.owner?.decision }}</p>
+              <div class="col">
+                <p>Decisão do criador: {{ DecisionEnum[bet.owner?.decision] }}</p>
+              </div>
+              <div class="col">
+                <p>Voto do criador: {{ VoteEnum[bet.owner?.winnerVote] }}</p>
+              </div>
             </div>
             <div class="row">
-              <p>Voto do criador:&nbsp;{{ bet.owner?.winnerVote }}</p>
-            </div>
-            <div class="row">
-              <p>Decisão do desafiante:&nbsp;{{ bet.challenger?.decision }}</p>
-            </div>
-            <div class="row">
-              <p>Voto do desafiante:&nbsp;{{ bet.challenger?.winnerVote }}</p>
-            </div>
-          </div>
-          <!-- Bet Value -->
-          <div class="col" id="value-col">
-            <div class="row">
-              <h1>Valor:</h1>
-            </div>
-            <div class="row">
-              {{ ethValue(bet.value) }} ETH
+              <div class="col">
+                <p>Decisão do desafiante: {{ DecisionEnum[bet.challenger?.decision] }}</p>
+              </div>
+              <div class="col">
+                <p>Voto do desafiante: {{ VoteEnum[bet.challenger?.winnerVote] }}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -89,6 +98,8 @@
 <script setup>
 import { BlockBetService } from "@/services/BlockBetService";
 import { StatusEnum } from "@/constants/statusEnum";
+import { VoteEnum } from "@/constants/voteEnum";
+import { DecisionEnum } from "@/constants/decisionEnum";
 import Web3 from "web3";
 import { injected } from "~/connectors";
 
@@ -177,6 +188,15 @@ body {
   height: max-content;
 }
 
+hr {
+  justify-content: center;
+  width: 90%;
+  border: none;
+  height: 2px;
+  background: linear-gradient(to right, rgb(31, 150, 255), blueviolet, rgb(226, 14, 208));
+  margin: 30px auto;
+}
+
 .bet-wrapper {
   background-color: #1b1b1b;
   display: flex;
@@ -194,10 +214,6 @@ body {
   border: 1 solid white;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   border-radius: 15px;
-}
-
-.bet-header {
-  padding-bottom: 20px;
 }
 
 #bet-title {
@@ -220,11 +236,11 @@ body {
 }
 
 #bet-identifier {
-  flex: 1;
+  flex: 8;
 }
 
-#status-col {
-  justify-content: end;
+#status-row {
+  justify-content: center;
   display: flex;
   font-weight: bold;
   font-size: 20px;
@@ -237,19 +253,21 @@ body {
   align-self: center;
 }
 
-#value-col {
-  font-size: 21px;
+#value-row {
+  justify-content: end;
   display: flex;
+  font-size: 21px;
+  padding-top: 30px;
   flex-direction: column;
   align-self: start;
-  justify-content: center;
 }
 
-#value-col h1 {
+#value-row h1 {
   font-weight: bold;
 }
 
-#value-col div {
+#value-row div {
+  justify-content: center;
   align-self: center;
 }
 
