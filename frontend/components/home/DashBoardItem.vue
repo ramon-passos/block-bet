@@ -7,9 +7,14 @@
         </p>
       </div>
       <div class="row bet-data">
-        <div class="col data-field" id="desc-col">
+        <div class="col data-field" id="value-col">
           <p>
             Valor apostado: {{ ethValue(betData.value) }} ETH
+          </p>
+        </div>
+        <div class="col data-field" id="decision-col">
+          <p>
+            Decisão do criador: {{ DecisionEnum[betData.owner?.decision] }}
           </p>
         </div>
         <div class="col data-field" id="status-col">
@@ -24,6 +29,7 @@
 </template>
 
 <script setup>
+import { DecisionEnum } from "@/constants/decisionEnum";
 import { StatusEnum } from "@/constants/statusEnum";
 import Web3 from "web3";
 
@@ -75,8 +81,8 @@ function showBet(uuid) {
   flex: 0.5;
 }
 
-#desc-col {
-  flex: 8;
+#value-col, #decision-col  {
+  flex: 4;
   padding-right: 30px;
 }
 
