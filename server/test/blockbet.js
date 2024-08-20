@@ -129,15 +129,19 @@ contract("BlockBet", (accounts) => {
   describe("voteWinner", () => {
     let createdUuid;
     beforeEach(async () => {
+      const beforeBalance = await web3.eth.getBalance(accounts[0])
+      const beforeBalanceEth = web3.utils.fromWei(beforeBalance, 'ether')
+      console.log({beforeBalanceEth})
+
       const result = await blockBetInstance.createBet(1, "sample description", {
         from: accounts[0],
-        value: 100,
+        value: web3.utils.toWei('10', 'ether'),
       });
       const logs = result.logs;
       createdUuid = logs.find((log) => log.event === "BetCreated").args.uuid;
       await blockBetInstance.challengeBet(createdUuid, {
         from: accounts[1],
-        value: 100,
+        value: web3.utils.toWei('10', 'ether'),
       });
     });
     it("should vote for the winner successfully", async () => {
@@ -152,6 +156,10 @@ contract("BlockBet", (accounts) => {
     it('should vote in the same result and finalize bet', async () => {
       await blockBetInstance.voteWinner(createdUuid, 1, { from: accounts[0] });
       await blockBetInstance.voteWinner(createdUuid, 1, { from: accounts[1] });
+
+      const afterBalance = await web3.eth.getBalance(accounts[0])
+      const afterBalanceEth = web3.utils.fromWei(afterBalance, 'ether')
+      console.log({afterBalanceEth})
       const foundBet = await blockBetInstance.getBet.call(createdUuid);
       assert.equal(
         foundBet.status,

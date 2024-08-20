@@ -101,7 +101,7 @@ contract BlockBet {
 
         bets[index].status = DataTypes.Status.INVALID;
 
-        emit Transfer(escrow, bet.owner.punterAddress, bet.value);
+        Utils.transferValues(escrow, bet.owner.punterAddress, bet.value);
 
         return true;
     }
@@ -159,15 +159,13 @@ contract BlockBet {
 
             if (bet.owner.winnerVote == DataTypes.WinnerVote.OWNER) {
                 bets[index].result = bet.owner.punterAddress;
-                emit Transfer(escrow, bet.owner.punterAddress, bet.value * 2);
+                Utils.transferValues(escrow, bet.owner.punterAddress, bet.value * 2);
+                
                 // TODO increase reputation of owner and challenger
             } else {
                 bets[index].result = bet.challenger.punterAddress;
-                emit Transfer(
-                    escrow,
-                    bet.challenger.punterAddress,
-                    bet.value * 2
-                );
+                Utils.transferValues(escrow, bet.challenger.punterAddress, bet.value * 2);
+
                 // TODO increase reputation of owner and challenger
             }
         } else {
@@ -369,19 +367,19 @@ contract BlockBet {
         uint256 refundAmount = (bet.value * 2) - oracleShare;
         uint numberOfOraclesWinner = oraclesMajority.oraclesWinner.length;
         if (oraclesMajority.winnerVote == DataTypes.WinnerVote.OWNER) {
-            emit Transfer(escrow, bet.owner.punterAddress, refundAmount);
+            Utils.transferValues(escrow, bet.owner.punterAddress, refundAmount);
             bet.result = bet.owner.punterAddress;
             bet.status = DataTypes.Status.FINISHED;
         } else if (
             oraclesMajority.winnerVote == DataTypes.WinnerVote.CHALLENGER
         ) {
-            emit Transfer(escrow, bet.challenger.punterAddress, refundAmount);
+            Utils.transferValues(escrow, bet.challenger.punterAddress, refundAmount);
             bet.result = bet.challenger.punterAddress;
             bet.status = DataTypes.Status.FINISHED;
         } else {
             // RISKY: oracles trools can vote for invalid to get money
-            emit Transfer(escrow, bet.owner.punterAddress, refundAmount / 2);
-            emit Transfer(
+            Utils.transferValues(escrow, bet.owner.punterAddress, refundAmount / 2);
+            Utils.transferValues(
                 escrow,
                 bet.challenger.punterAddress,
                 refundAmount / 2
@@ -390,7 +388,7 @@ contract BlockBet {
         }
         uint256 individualOracleShare = oracleShare / numberOfOraclesWinner;
         for (uint i = 0; i < numberOfOraclesWinner; i++) {
-            emit Transfer(
+            Utils.transferValues(
                 escrow,
                 oraclesMajority.oraclesWinner[i],
                 individualOracleShare

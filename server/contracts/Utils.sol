@@ -5,6 +5,16 @@ import "./DataTypes.sol";
 
 library Utils {
     using DataTypes for *;
+
+    event Transfer(address indexed _from, address indexed _to, uint256 _value);
+
+    function transferValues(address from, address to, uint value) internal returns (bool sufficient) {
+        emit Transfer(from, to, value);    
+        payable(to).transfer(value);
+
+        return true;
+    }
+
     function generateUUID(
         uint openBetsLength
     ) internal view returns (string memory) {
