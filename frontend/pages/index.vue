@@ -12,7 +12,7 @@
       </h1>
       <div class="row main-section-subheader">
         <div class="bet-info">
-          <p id="id-info" @click="openModal">Como funcionam as apostas?</p>
+          <p id="id-info" @click="openModal">&#128712; Como funcionam as apostas?</p>
           <div v-if="isModalOpen" class="overlay" @click="closeModal"></div>
           <div v-if="isModalOpen" class="modal">
             <div class="row">

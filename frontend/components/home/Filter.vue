@@ -54,8 +54,6 @@ function applyFilter() {
 }
 
 .bet-filter:hover {
-  background-color: rgb(226, 14, 208);
-  color: white;
   cursor: pointer;
   transform: scale(1.02);
 }

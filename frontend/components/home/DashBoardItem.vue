@@ -17,11 +17,21 @@
             Decisão do criador: {{ DecisionEnum[betData.owner?.decision] }}
           </p>
         </div>
+        <div class="col data-field" id="decision-col" v-if="betData.status == 'OPEN'">
+          <p>
+            Decisão do desafiante: {{ DecisionEnum[betData.challenger?.decision] }}
+          </p>
+        </div>
         <div class="col data-field" id="status-col">
           <p>
             {{ StatusEnum[betData.status] }}
           </p>
         </div>
+      </div>
+      <div class="row bet-data" id="contested-warning" v-if="betData.status == 'CONTESTED'">
+        <p>
+          A aposta está sendo auditada pelos oráculos da rede.
+        </p>
       </div>
     </div>
   </section>
@@ -92,6 +102,11 @@ function showBet(uuid) {
   display: flex;
   justify-content: flex-end;
   padding-right: 10px;
+}
+
+#contested-warning {
+  padding-top: 10px;
+  color: rgb(226, 14, 208);
 }
 
 hr {

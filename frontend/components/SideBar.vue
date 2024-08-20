@@ -67,6 +67,7 @@ const props = defineProps({
   color: white;
   transform: translateX(-100%); /* Começa fora da tela */
   transition: transform 0.4s ease, width 0.4s ease; /* Animação suave */
+  padding-bottom: 40px;
 }
 
 .sidebar-open {
