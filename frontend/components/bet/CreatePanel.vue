@@ -20,6 +20,7 @@
             </div>
           </div>
         </div>
+        <hr>
         <div class="row">
           <div class="col" id="value-col">
             <div class="row">
@@ -67,7 +68,7 @@
         <div class="row">
           <div class="col" id="decision-col">
             <div class="row">
-              <p>Seu balanço:  {{ balance }} ETH</p>
+              <p>Seu saldo:  {{ balance }} ETH</p>
             </div>
           </div>
         </div>
@@ -175,15 +176,22 @@ function createBet() {
 </script>
 
 <style scoped>
+h1, h2, h3, p {
+  color: white;
+}
+
 .row {
   gap: 50px;
 }
 
 .row input {
   flex: 1;
+  background-color: rgb(231, 230, 233);
 }
 
 .create-bet-header {
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: normal;
   justify-content: center;
   font-size: 38px;
   font-weight: 700;
@@ -202,7 +210,7 @@ function createBet() {
   width: 70%;
   margin: 0 auto;
   padding: 30px 70px;
-  background-color: rgb(233, 240, 238);
+  background-color: rgb(59, 59, 59);
   border: 1 solid white;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   border-radius: 15px;
@@ -249,6 +257,7 @@ select {
   border-radius: 10px;
   padding: 3px 10px;
   margin-top: 6px;
+  background-color: rgb(231, 230, 233);
 }
 
 #join-bet-row {
@@ -260,5 +269,14 @@ select {
   color: red;
   margin-top: 10px;
   font-size: 14px;
+}
+
+hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(to right, rgb(31, 150, 255), blueviolet, rgb(226, 14, 208));
+  width: 80%;
+  margin: auto;
+  margin-bottom: 10px;
 }
 </style>

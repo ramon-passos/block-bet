@@ -84,7 +84,7 @@ function showBet(uuid) {
   color: rgb(226, 14, 208);
   flex: 1;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   padding-right: 10px;
 }
 
