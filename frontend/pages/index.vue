@@ -1,125 +1,159 @@
 <template>
-  <div
-    class="bg-gray-500 min-h-screen md:flex items-center justify-center text-white"
-  >
-    <div
-      class="relative md:max-w-lg min-h-screen md:min-h-0 w-full md:mx-auto bg-gray-800 shadow-lg md:rounded-lg px-8 py-6"
-    >
-      <Header />
-
-      <hr :style="{ margin: '2rem' }" />
-
-      <div
-        :style="{
-          display: 'grid',
-          gridGap: '1rem',
-          gridTemplateColumns: '1fr 1fr',
-          maxWidth: '20rem',
-          margin: 'auto',
-        }"
-      >
-        <button
-          v-for="(newConnector, name) in connectorsByName"
-          class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          :key="name"
-          @click="setActivatingConnector(newConnector)"
-        >
-          <span
-            class="mr-2"
-            v-if="newConnector === connector"
-            role="img"
-            aria-label="check"
-          >
-            ✅
-          </span>
-          <svg
-            v-else-if="activatingConnector === newConnector"
-            class="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-indigo"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              class="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              stroke-width="4"
-            ></circle>
-            <path
-              class="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            ></path>
-          </svg>
-
-          {{ name }}
-        </button>
-      </div>
-
-      <div class="flex flex-col items-center mt-8 text-center">
-        <button
-          v-if="active"
-          class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-red-800 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-          @click="deactivate"
-        >
-          Deactivate
-        </button>
-
-        <h4 v-if="!!error" :style="{ marginTop: '1rem', marginBottom: '0' }">
-          {{ getErrorMessage(error) }}
-        </h4>
-      </div>
-    </div>
+  <div>
+    <Head>
+      <Title>Home</Title>
+    </Head>
   </div>
+
+  <Navbar :toggleSidebar="toggleSidebar" />
+  <div class="row">
+    <HomeSideBar :isSidebarOpen="isSidebarOpen" :toggleSidebar="toggleSidebar" />
+    <section class="main-section col">
+      <div class="row main-section-header">
+        <h1>
+          <b>Apostas Ativas</b>
+        </h1>
+        <div class="row main-section-subheader">
+          <div class="bet-info">
+            <p id="id-info" @click="openModal">Como funcionam as apostas?</p>
+            <div v-if="isModalOpen" class="overlay" @click="closeModal"></div>
+            <div v-if="isModalOpen" class="modal">
+              <div class="row">
+                <h2>Regras para as apostas:</h2>
+                <button @click="closeModal" style="font-weight: 700; font-size: 20px;">
+                  &times;
+                </button>
+              </div>
+              <div class="row">
+                <p>
+                  Aqui estão as informações sobre como funcionam as apostas no
+                  site...
+                </p>
+              </div>
+            </div>
+          </div>
+          <Button buttonText="Criar minha aposta" :buttonFunction="goToDestination">
+          </Button>
+        </div>
+      </div>
+      <HomeDashBoard />
+    </section>
+  </div>
+  <Footer> </Footer>
 </template>
 
-<script setup lang="ts">
-import { UnsupportedChainIdError } from "@instadapp/vue-web3";
-import { injected, network, walletconnect } from "~/connectors";
-import {
-  NoEthereumProviderError,
-  UserRejectedRequestError as UserRejectedRequestErrorInjected,
-} from "@web3-react/injected-connector";
-import { UserRejectedRequestError as UserRejectedRequestErrorWalletConnect } from "@web3-react/walletconnect-connector";
+<script setup>
+const router = useRouter();
 
-enum ConnectorNames {
-  Injected = "Injected",
-  Network = "Network",
-  WalletConnect = "WalletConnect",
+function goToDestination() {
+  router.push("/bet/create");
 }
 
-const connectorsByName: { [connectorName in ConnectorNames]: any } = {
-  [ConnectorNames.Injected]: injected,
-  [ConnectorNames.Network]: network,
-  [ConnectorNames.WalletConnect]: walletconnect,
+const isModalOpen = ref(false);
+
+const openModal = () => {
+  isModalOpen.value = true;
 };
 
-function getErrorMessage(error: Error) {
-  if (error instanceof NoEthereumProviderError) {
-    return "No Ethereum browser extension detected, install MetaMask on desktop or visit from a dApp browser on mobile.";
-  } else if (error instanceof UnsupportedChainIdError) {
-    return "You're connected to an unsupported network.";
-  } else if (
-    error instanceof UserRejectedRequestErrorInjected ||
-    error instanceof UserRejectedRequestErrorWalletConnect
-  ) {
-    return "Please authorize this website to access your Ethereum account.";
-  } else {
-    console.error(error);
-    return "An unknown error occurred. Check the console for more details.";
-  }
+const closeModal = () => {
+  isModalOpen.value = false;
+};
+
+const isSidebarOpen = ref(false)
+
+const toggleSidebar = () => {
+  isSidebarOpen.value = !isSidebarOpen.value
 }
-
-const { active, activate, deactivate, connector, error } = useWeb3();
-useEagerConnect();
-
-const activatingConnector = ref();
-
-const setActivatingConnector = async (newConnector: any) => {
-  activatingConnector.value = newConnector;
-  await activate(newConnector);
-  activatingConnector.value = undefined;
-};
 </script>
+
+<style scoped>
+body {
+  background-color: #1b1b1b;
+}
+
+.sidebar {
+  color: #1b1b1b;
+  background-color: rgb(231, 230, 233);
+}
+
+.main-section {
+  justify-content: center;
+  background-color: #1b1b1b;
+  flex: 5;
+}
+
+.main-section h1 {
+  color: rgb(240, 240, 240);
+  font-size: 36px;
+  font-weight: 400;
+  padding-top: 50px;
+  display: flex;
+  justify-content: center;
+}
+
+.main-section-header {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.main-section-header button {
+  margin-left: auto;
+}
+
+.main-section-subheader {
+  width: 80%;
+  justify-content: space-between;
+  align-items: end;
+}
+
+.bet-info {
+  text-decoration: underline;
+  color: rgb(31, 150, 255);
+  padding-right: 400px;
+}
+
+#id-info:hover {
+  text-decoration: underline;
+  color: rgb(4, 94, 172);
+  cursor: pointer;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+
+.modal {
+  font-size: 18px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+  z-index: 11;
+  max-width: 600px;
+  width: 90%;
+  border-radius: 10px;
+}
+
+.modal .row {
+  padding: 5px 10px;
+}
+
+.modal button:hover {
+  text-decoration: underline;
+}
+
+.modal h2 {
+  align-self: center;
+}
+</style>

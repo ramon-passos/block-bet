@@ -25,5 +25,6 @@ logs
 .env.*
 !.env.example
 
-
+#contract volatile information
 /server/build/contracts/*.json
+/frontend/contract/abi.js

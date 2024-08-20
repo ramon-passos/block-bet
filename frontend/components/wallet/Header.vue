@@ -14,10 +14,10 @@
         margin: 'auto',
       }"
     >
-      <ChainId />
-      <BlockNumber />
-      <Account />
-      <Balance />
+      <WalletChainId />
+      <WalletBlockNumber />
+      <WalletAccount />
+      <WalletBalance />
     </h3>
   </div>
 </template>

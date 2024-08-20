@@ -1,0 +1,26 @@
+@font-face {
+  font-family: 'FonteLogo';
+  src: url('~/assets/fonts/fonte-logo.ttf') format('ttf');
+}
+
+body {
+  font-family: Gabarito, sans-serif;
+  font-weight: 400;
+  background-color: #262626;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.col {
+  flex: 1;
+  justify-content: center;
+}

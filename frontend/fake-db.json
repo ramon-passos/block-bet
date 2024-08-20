@@ -1,0 +1,254 @@
+{
+  "bets": [
+    {
+      "id": "1",
+      "uuid": "b5bda5e1-3d6c-4e62-8f82-b1297e77fa25",
+      "timestamp": 1692345600,
+      "value": 1000,
+      "description": "Aposta sobre o resultado de um jogo de futebol",
+      "result": "0x0000000000000000000000000000000000000000",
+      "oracles": [
+        {
+          "oracleAddress": "0x0000000000000000000000000000000000000001",
+          "oracleDecision": "UNDEFINED"
+        }
+      ],
+      "owner": {
+        "punterAddress": "0x0000000000000000000000000000000000000001",
+        "decision": "TRUE",
+        "winnerVote": "OWNER"
+      },
+      "challenger": {
+        "punterAddress": "0x0000000000000000000000000000000000000002",
+        "decision": "FALSE",
+        "winnerVote": "CHALLENGER"
+      },
+      "status": "open"
+    },
+    {
+      "id": "2",
+      "uuid": "ac7f01a9-6e4e-4d93-9b34-e10c8fa9e4f0",
+      "timestamp": 1692348600,
+      "value": 2000,
+      "description": "Aposta sobre a eleição presidencial",
+      "result": "0x0000000000000000000000000000000000000000",
+      "oracles": [
+        {
+          "oracleAddress": "0x0000000000000000000000000000000000000003",
+          "oracleDecision": "OWNER"
+        }
+      ],
+      "owner": {
+        "punterAddress": "0x0000000000000000000000000000000000000003",
+        "decision": "FALSE",
+        "winnerVote": "OWNER"
+      },
+      "challenger": {
+        "punterAddress": "0x0000000000000000000000000000000000000004",
+        "decision": "TRUE",
+        "winnerVote": "CHALLENGER"
+      },
+      "status": "challenged"
+    },
+    {
+      "id": "3",
+      "uuid": "d6e707b4-9532-4fa7-83c2-37e1d146b836",
+      "timestamp": 1692351600,
+      "value": 1500,
+      "description": "Aposta sobre o vencedor do campeonato de tênis",
+      "result": "0x0000000000000000000000000000000000000000",
+      "oracles": [
+        {
+          "oracleAddress": "0x0000000000000000000000000000000000000005",
+          "oracleDecision": "CHALLENGER"
+        }
+      ],
+      "owner": {
+        "punterAddress": "0x0000000000000000000000000000000000000005",
+        "decision": "TRUE",
+        "winnerVote": "OWNER"
+      },
+      "challenger": {
+        "punterAddress": "0x0000000000000000000000000000000000000006",
+        "decision": "FALSE",
+        "winnerVote": "CHALLENGER"
+      },
+      "status": "finished"
+    },
+    {
+      "id": "4",
+      "uuid": "f9c49c90-5141-42d1-8b57-cb3a8b8d7dd2",
+      "timestamp": 1692354600,
+      "value": 500,
+      "description": "Aposta sobre o número de gols em um jogo de futebol",
+      "result": "0x0000000000000000000000000000000000000000",
+      "oracles": [
+        {
+          "oracleAddress": "0x0000000000000000000000000000000000000007",
+          "oracleDecision": "INVALID"
+        }
+      ],
+      "owner": {
+        "punterAddress": "0x0000000000000000000000000000000000000007",
+        "decision": "TRUE",
+        "winnerVote": "OWNER"
+      },
+      "challenger": {
+        "punterAddress": "0x0000000000000000000000000000000000000008",
+        "decision": "FALSE",
+        "winnerVote": "CHALLENGER"
+      },
+      "status": "invalid"
+    },
+    {
+      "id": "5",
+      "uuid": "08a2370d-5b92-4fb1-a2a3-33f66ebd6589",
+      "timestamp": 1692357600,
+      "value": 3000,
+      "description": "Aposta sobre o resultado de um jogo de basquete",
+      "result": "0x0000000000000000000000000000000000000000",
+      "oracles": [
+        {
+          "oracleAddress": "0x0000000000000000000000000000000000000009",
+          "oracleDecision": "UNDEFINED"
+        }
+      ],
+      "owner": {
+        "punterAddress": "0x0000000000000000000000000000000000000009",
+        "decision": "FALSE",
+        "winnerVote": "OWNER"
+      },
+      "challenger": {
+        "punterAddress": "0x0000000000000000000000000000000000000010",
+        "decision": "TRUE",
+        "winnerVote": "CHALLENGER"
+      },
+      "status": "contested"
+    },
+    {
+      "id": "6",
+      "uuid": "d8a5f62f-73fc-487b-9f88-0b13f7d64c7f",
+      "timestamp": 1692360600,
+      "value": 2500,
+      "description": "Aposta sobre o resultado de um debate político",
+      "result": "0x0000000000000000000000000000000000000000",
+      "oracles": [
+        {
+          "oracleAddress": "0x0000000000000000000000000000000000000011",
+          "oracleDecision": "OWNER"
+        }
+      ],
+      "owner": {
+        "punterAddress": "0x8ee3bd5161260bC84f84901CDd4bc48F9a7a4eE0",
+        "decision": "TRUE",
+        "winnerVote": "OWNER"
+      },
+      "challenger": {
+        "punterAddress": "0x0000000000000000000000000000000000000012",
+        "decision": "FALSE",
+        "winnerVote": "CHALLENGER"
+      },
+      "status": "open"
+    },
+    {
+      "id": "7",
+      "uuid": "e1a41a6c-9959-4f9c-bb0c-df3f1d8e06fb",
+      "timestamp": 1692363600,
+      "value": 1200,
+      "description": "Aposta sobre o vencedor de um torneio de pôquer",
+      "result": "0x0000000000000000000000000000000000000000",
+      "oracles": [
+        {
+          "oracleAddress": "0x0000000000000000000000000000000000000013",
+          "oracleDecision": "CHALLENGER"
+        }
+      ],
+      "owner": {
+        "punterAddress": "0x0000000000000000000000000000000000000013",
+        "decision": "FALSE",
+        "winnerVote": "OWNER"
+      },
+      "challenger": {
+        "punterAddress": "0x0000000000000000000000000000000000000014",
+        "decision": "TRUE",
+        "winnerVote": "CHALLENGER"
+      },
+      "status": "challenged"
+    },
+    {
+      "id": "8",
+      "uuid": "bfea42ea-7510-45cc-9c7a-13e0b8fba6d9",
+      "timestamp": 1692366600,
+      "value": 900,
+      "description": "Aposta sobre a previsão do tempo",
+      "result": "0x0000000000000000000000000000000000000000",
+      "oracles": [
+        {
+          "oracleAddress": "0x0000000000000000000000000000000000000015",
+          "oracleDecision": "UNDEFINED"
+        }
+      ],
+      "owner": {
+        "punterAddress": "0x0000000000000000000000000000000000000015",
+        "decision": "TRUE",
+        "winnerVote": "OWNER"
+      },
+      "challenger": {
+        "punterAddress": "0x0000000000000000000000000000000000000016",
+        "decision": "FALSE",
+        "winnerVote": "CHALLENGER"
+      },
+      "status": "finished"
+    },
+    {
+      "id": "9",
+      "uuid": "c32a0f0f-61c0-4d8d-8c5b-10f938564da3",
+      "timestamp": 1692369600,
+      "value": 1700,
+      "description": "Aposta sobre a duração de uma corrida de carros",
+      "result": "0x0000000000000000000000000000000000000000",
+      "oracles": [
+        {
+          "oracleAddress": "0x0000000000000000000000000000000000000017",
+          "oracleDecision": "OWNER"
+        }
+      ],
+      "owner": {
+        "punterAddress": "0x0000000000000000000000000000000000000017",
+        "decision": "TRUE",
+        "winnerVote": "OWNER"
+      },
+      "challenger": {
+        "punterAddress": "0x0000000000000000000000000000000000000018",
+        "decision": "FALSE",
+        "winnerVote": "CHALLENGER"
+      },
+      "status": "contested"
+    },
+    {
+      "id": "10",
+      "uuid": "b9fc04e4-d5e0-4d2c-a3b8-698f8b9c4fa1",
+      "timestamp": 1692372600,
+      "value": 400,
+      "description": "Aposta sobre o número de sets em uma partida de tênis",
+      "result": "0x0000000000000000000000000000000000000000",
+      "oracles": [
+        {
+          "oracleAddress": "0x0000000000000000000000000000000000000019",
+          "oracleDecision": "CHALLENGER"
+        }
+      ],
+      "owner": {
+        "punterAddress": "0x0000000000000000000000000000000000000019",
+        "decision": "FALSE",
+        "winnerVote": "OWNER"
+      },
+      "challenger": {
+        "punterAddress": "0x0000000000000000000000000000000000000020",
+        "decision": "TRUE",
+        "winnerVote": "CHALLENGER"
+      },
+      "status": "invalid"
+    }
+  ]
+}

@@ -18,3 +18,9 @@ test:
 
 debug:
 	docker compose exec server bash -c "truffle debug"
+
+front-end:
+	docker compose up front-end --force-recreate
+
+mock-server:
+	docker compose exec front-end bash -c "yarn start:mock"
