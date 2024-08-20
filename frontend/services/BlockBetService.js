@@ -92,8 +92,6 @@ export class BlockBetService {
   }
 
   async voteWinner(uuid, account, winnerVote) {
-    console.log({account})
-
     const translatedWinner = this._translate_winner_vote(winnerVote)
     const call = this.contract.methods.voteWinner(uuid, translatedWinner);
     const gasEstimate = await call.estimateGas({ from: account })
@@ -102,7 +100,14 @@ export class BlockBetService {
     return result;
   }
 
-  // async function auditBet() {}
+  async auditBet(uuid, account, votedWinner) {
+    const translatedWinner = this._translate_winner_vote(votedWinner);
+    const call = this.contract.methods.auditBet(uuid, translatedWinner);
+    const gasEstimate = await call.estimateGas({ from: account })
+    const result = await call.send({ from: account, gas: gasEstimate });
+
+    return result;
+  }
 
   translate_value(value, valueType) {
     return this.web3.utils.toWei(value.toString(), valueType);
@@ -117,12 +122,7 @@ export class BlockBetService {
   }
 
   _translate_winner_vote(vote) {
-    console.log("=============")
-    console.log({vote})
-    console.log("=============")
     const translated = vote === "owner" ? 1 : 2;
-
-    console.log({translated})
 
     return translated
   }
