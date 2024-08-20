@@ -43,7 +43,7 @@
         <hr>
         <!-- Bet Details -->
         <div class="row">
-          <div class="col" id="desc-col">
+          <div class="col" id="descision-info-col">
             <div class="row">
               <div class="col">
                 <p>Decisão do criador: {{ DecisionEnum[bet.owner?.decision] }}</p>
@@ -71,24 +71,44 @@
           <Button buttonText="Cancelar minha aposta" :buttonFunction="cancelBet" />
         </div>
         <div class="row bet-option" id="audit-bet" v-show="betIsContested(bet.status)">
-          <Button buttonText="Auditar aposta" />
-        </div>
-        <div class="row bet-option" id="decide-bet-answer" v-show="showWinnerVote(bet.status)">
           <div class="row">
-            <div class="col" id="decision-col">
-              <div class="row">
-                <p>Sua decisão:</p>
-              </div>
-              <div class="row">
-                <select v-model="selectedVote">
-                  <option disabled selected hidden>Escolha uma das opções</option>
-                  <option value="owner">Criador</option>
-                  <option value="challenger">Desafiante</option>
-                </select>
-              </div>
+            <h1>Decida quem dos envolvidos ganhou:</h1>
+          </div>
+          
+          <div class="row">
+            <div class="col">
+              <p>Quem realmente venceu a aposta?</p>
+              <select v-model="selectedWinner">
+                <option value="" disabled selected hidden>Escolha uma das opções</option>
+                <option value="owner">Criador</option>
+                <option value="challenger">Desafiante</option>
+              </select>
+            </div>
+            
+            <div class="col action-button">
+              <Button buttonText="Auditar aposta" />
             </div>
           </div>
-          <Button buttonText="Confirmar Resultado" :buttonFunction="voteWinner" />
+        </div>
+        <div class="col bet-option" id="decide-bet-answer" v-show="showWinnerVote(bet.status)">
+          <div class="row">
+            <h1>Agora que o evento ocorreu, dê sua decisão:</h1>
+          </div>
+          
+          <div class="row">
+            <div class="col">
+              <p>Quem venceu a aposta?</p>
+              <select v-model="selectedVote">
+                <option value="" disabled selected hidden>Escolha uma das opções</option>
+                <option value="owner">Criador</option>
+                <option value="challenger">Desafiante</option>
+              </select>
+            </div>
+            
+            <div class="col action-button">
+              <Button buttonText="Confirmar Resultado" :buttonFunction="voteWinner" />
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -106,6 +126,8 @@ import { injected } from "~/connectors";
 const blockBetService = new BlockBetService();
 const bet = ref({});
 const selectedVote = ref("");
+const selectedWinner = ref("");
+
 const props = defineProps({
   uuid: {
     type: Number,
@@ -181,6 +203,13 @@ function challengeBet() {
 function voteWinner() {
   blockBetService.voteWinner(uuid, account.value, selectedVote.value)
 }
+
+watch(
+  bet,
+  () => {
+    getBet();
+  }
+)
 </script>
 
 <style scoped>
@@ -247,10 +276,14 @@ hr {
   color: rgb(226, 14, 208);
 }
 
-#desc-col {
+#descision-info-col {
   flex: 8;
   font-size: 18px;
   align-self: center;
+}
+
+#decision-col {
+  justify-content: center;
 }
 
 #value-row {
@@ -273,7 +306,36 @@ hr {
 
 .bet-option {
   padding: 30px 20px 0px 0px;
-  justify-content: end;
+}
+
+#decide-bet-answer {
+  width: 100%;
+  font-size: 20px;
+}
+
+.action-button {
+  display: flex;
+  justify-content: flex-end;
+}
+
+#decide-bet-answer h1 {
+  font-size: 25px;
+  font-weight: normal;
+  margin: auto;
+  padding-bottom: 20px;
+}
+
+#decide-bet-answer select {
+  color: black;
+  padding-right: 50px;
+}
+
+input,
+select {
+  border-radius: 10px;
+  padding: 3px 10px;
+  margin-top: 6px;
+  background-color: rgb(231, 230, 233);
 }
 
 option {
