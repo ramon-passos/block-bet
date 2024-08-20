@@ -43,9 +43,11 @@ function applyFilter() {
 
 <style scoped>
 .bet-filter {
+  font-family: Gabarito, sans-serif;
   border: 1px solid #161616;
   border-radius: 10px;
   padding: 5px 10px;
+  margin-top: 5px;
   font-size: 13px;
   margin-right: 20px;
   transition: transform 0.3s ease;

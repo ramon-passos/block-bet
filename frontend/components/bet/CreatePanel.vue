@@ -226,14 +226,6 @@ function createBet() {
   flex: 8;
 }
 
-#status-col {
-  display: flex-end;
-  justify-self: end;
-  font-weight: bold;
-  font-size: 20px;
-  color: rgb(226, 14, 208);
-}
-
 #desc-col {
   font-size: 22px;
   align-self: center;

@@ -5,41 +5,36 @@
     </Head>
   </div>
 
-  <Navbar :toggleSidebar="toggleSidebar" />
-  <div class="row">
-    <HomeSideBar :isSidebarOpen="isSidebarOpen" :toggleSidebar="toggleSidebar" />
-    <section class="main-section col">
-      <div class="row main-section-header">
-        <h1>
-          <b>Apostas Ativas</b>
-        </h1>
-        <div class="row main-section-subheader">
-          <div class="bet-info">
-            <p id="id-info" @click="openModal">Como funcionam as apostas?</p>
-            <div v-if="isModalOpen" class="overlay" @click="closeModal"></div>
-            <div v-if="isModalOpen" class="modal">
-              <div class="row">
-                <h2>Regras para as apostas:</h2>
-                <button @click="closeModal" style="font-weight: 700; font-size: 20px;">
-                  &times;
-                </button>
-              </div>
-              <div class="row">
-                <p>
-                  Aqui estão as informações sobre como funcionam as apostas no
-                  site...
-                </p>
-              </div>
+  <section class="main-section col">
+    <div class="row main-section-header">
+      <h1>
+        Apostas Ativas
+      </h1>
+      <div class="row main-section-subheader">
+        <div class="bet-info">
+          <p id="id-info" @click="openModal">Como funcionam as apostas?</p>
+          <div v-if="isModalOpen" class="overlay" @click="closeModal"></div>
+          <div v-if="isModalOpen" class="modal">
+            <div class="row">
+              <h2>Regras para as apostas:</h2>
+              <button @click="closeModal" style="font-weight: 700; font-size: 20px;">
+                &times;
+              </button>
+            </div>
+            <div class="row">
+              <p>
+                Aqui estão as informações sobre como funcionam as apostas no
+                site...
+              </p>
             </div>
           </div>
-          <Button buttonText="Criar minha aposta" :buttonFunction="goToDestination">
-          </Button>
         </div>
+        <Button buttonText="Criar minha aposta" :buttonFunction="goToDestination">
+        </Button>
       </div>
-      <HomeDashBoard />
-    </section>
-  </div>
-  <Footer> </Footer>
+    </div>
+    <HomeDashBoard />
+  </section>
 </template>
 
 <script setup>
@@ -58,22 +53,11 @@ const openModal = () => {
 const closeModal = () => {
   isModalOpen.value = false;
 };
-
-const isSidebarOpen = ref(false)
-
-const toggleSidebar = () => {
-  isSidebarOpen.value = !isSidebarOpen.value
-}
 </script>
 
 <style scoped>
 body {
   background-color: #1b1b1b;
-}
-
-.sidebar {
-  color: #1b1b1b;
-  background-color: rgb(231, 230, 233);
 }
 
 .main-section {
@@ -86,6 +70,7 @@ body {
   color: rgb(240, 240, 240);
   font-size: 36px;
   font-weight: 400;
+  font-family: 'Bebas Neue', sans-serif;
   padding-top: 50px;
   display: flex;
   justify-content: center;

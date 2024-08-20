@@ -3,13 +3,13 @@
     <div class="col">
       <div class="row bet-title">
         <p>
-          # {{ ethValue(betData.value) }} ETH
+          {{ betData.description }}
         </p>
       </div>
       <div class="row bet-data">
         <div class="col data-field" id="desc-col">
           <p>
-            {{ betData.description }}
+            Valor apostado: {{ ethValue(betData.value) }} ETH
           </p>
         </div>
         <div class="col data-field" id="status-col">
@@ -61,7 +61,7 @@ function showBet(uuid) {
 
 .bet-title {
   font-size: clamp(16px, 4vw, 24px);
-  font-weight: bold;
+  font-family: 'Bebas Neue', sans-serif;
   padding-bottom: 20px;
 }
 
@@ -81,7 +81,11 @@ function showBet(uuid) {
 }
 
 #status-col {
+  color: rgb(226, 14, 208);
   flex: 1;
+  display: flex;
+  justify-content: end;
+  padding-right: 10px;
 }
 
 hr {

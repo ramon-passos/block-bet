@@ -95,6 +95,7 @@ h2 {
   font-size: 24px;
   font-weight: 800;
   padding-bottom: 10px;
+  font-family: 'Bebas Neue', sans-serif;
 }
 
 p {

@@ -16,9 +16,9 @@
     <div class="center">
       <NuxtLink to="/">
         <div class="logo-wrapper">
-          <p>Block</p>
+          <p>Block&nbsp;</p>
           <img id='logo-nav' src="/logo.png">
-          <p>Bet&nbsp;&nbsp;</p>
+          <p>&nbsp;Bet</p>
         </div>
       </NuxtLink>
     </div>
@@ -79,14 +79,14 @@ const props = defineProps({
   display: flex;
   align-items: center;
   gap: 4px;
-  width: 106px;
+  width: 96px;
 }
 
 .logo-wrapper p {
   color: white;
   font-size: 30px;
-  font-weight: 900;
-  font-family: Lexend, sans-serif;
+  font-weight: 400;
+  font-family: 'Bebas Neue', sans-serif;
 }
 
 #logo-nav {

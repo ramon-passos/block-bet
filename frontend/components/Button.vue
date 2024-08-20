@@ -18,6 +18,7 @@ const props = defineProps({
 
 <style scoped>
 button {
+  font-family: Gabarito, sans-serif;
   background-color: blueviolet;
   border: 1px solid rgb(59, 59, 59);
   border-radius: 10px;

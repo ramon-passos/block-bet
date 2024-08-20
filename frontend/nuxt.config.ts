@@ -25,6 +25,8 @@ export default defineNuxtConfig({
     families: {
       Gabarito: [400, 500, 600, 700, 800, 900],
       Lexend: [500],
+      'Bebas Neue': [400],
     },
+    display: 'swap',
   },
 });

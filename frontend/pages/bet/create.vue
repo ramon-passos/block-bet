@@ -4,9 +4,9 @@
       <Title>Create your bet</Title>
     </Head>
   </div>
-  <Navbar />
-  <BetCreatePanel />
-  <Footer />
+  <div class="col">
+    <BetCreatePanel />
+  </div>
 </template>
 
 <script setup>
