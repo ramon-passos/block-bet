@@ -70,7 +70,7 @@
         <div class="row bet-option" id="cancel-bet" v-show="betIsCancelable(bet.status)">
           <Button buttonText="Cancelar minha aposta" :buttonFunction="cancelBet" />
         </div>
-        <div class="row bet-option" id="audit-bet" v-show="showAuditInput(bet.status)">
+        <div class="col bet-option" id="audit-bet" v-show="showAuditInput(bet.status)">
           <div class="row">
             <h1>Decida quem dos envolvidos ganhou:</h1>
           </div>
@@ -309,7 +309,7 @@ hr {
 }
 
 #value-row {
-  justify-content: end;
+  justify-content: flex-end;
   display: flex;
   font-size: 21px;
   padding-top: 30px;
@@ -330,7 +330,7 @@ hr {
   padding: 30px 20px 0px 0px;
 }
 
-#decide-bet-answer {
+#decide-bet-answer, #audit-bet {
   width: 100%;
   font-size: 20px;
 }
@@ -338,16 +338,17 @@ hr {
 .action-button {
   display: flex;
   justify-content: flex-end;
+  margin: auto;
 }
 
-#decide-bet-answer h1 {
+#decide-bet-answer h1, #audit-bet h1 {
   font-size: 25px;
   font-weight: normal;
   margin: auto;
   padding-bottom: 20px;
 }
 
-#decide-bet-answer select {
+#decide-bet-answer select, #audit-bet select {
   color: black;
   padding-right: 50px;
 }
