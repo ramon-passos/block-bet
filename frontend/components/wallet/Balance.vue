@@ -1,5 +1,5 @@
 <template>
-  <span class="font-medium">Balance</span>
+  <span class="font-medium">Saldo</span>
   <span role="img" aria-label="gold"> 💰 </span>
   <span>{{
     balance === null
