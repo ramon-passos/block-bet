@@ -23,7 +23,7 @@ function parsePunter(punter) {
 function parseOracles(oracles) {
   return oracles.map(oracle => ({
     oracleAddress: oracle.oracleAddress,
-    oracleDecision: parseDecision(oracle.oracleDecision),
+    oracleDecision: parseWinnerVote(oracle.oracleDecision),
   }));
 }
 
