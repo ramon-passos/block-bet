@@ -2,7 +2,7 @@
 pragma solidity ^0.8.13;
 
 library DataTypes {
-    uint constant MAX_ORACLES = 1;
+    uint constant MAX_ORACLES = 5;
 
     enum Decision {
         UNDEFINED,
