@@ -70,7 +70,7 @@
         <div class="row bet-option" id="cancel-bet" v-show="betIsCancelable(bet.status)">
           <Button buttonText="Cancelar minha aposta" :buttonFunction="cancelBet" />
         </div>
-        <div class="row bet-option" id="audit-bet" v-show="betIsContested(bet.status)">
+        <div class="row bet-option" id="audit-bet" v-show="showAuditInput(bet.status)">
           <div class="row">
             <h1>Decida quem dos envolvidos ganhou:</h1>
           </div>
@@ -160,20 +160,30 @@ const betIsCancelable = (status) => {
   return betIsOpen(status) && ownerAddress === account.value;
 }
 
-const betIsContested = (status) => {
+const showAuditInput = (status) => {
   const ownerAddress = bet.value.owner?.punterAddress;
   const challengerAddress = bet.value.challenger?.punterAddress;
   const isNotAPunter = ownerAddress !== account.value && challengerAddress !== account.value
 
-  return status == "CONTESTED" && isNotAPunter;
+  const voted = bet.value.oracles?.some(({oracleAddress, oracleDecision}) => oracleAddress === account.value && oracleDecision !== "UNDEFINED");
+
+  return status == "CONTESTED" && isNotAPunter && !voted;
 }
 
 const showWinnerVote = (status) => {
   const ownerAddress = bet.value.owner?.punterAddress;
   const challengerAddress = bet.value.challenger?.punterAddress;
-  const isPunter = ownerAddress === account.value || challengerAddress === account.value
 
-  return status == "CHALLENGED" && isPunter;
+  const isChallenger = challengerAddress === account.value;
+  const isOwner = ownerAddress === account.value;
+  
+  const ownerVoted = isOwner && bet.value.owner?.winnerVote !== "UNDEFINED"
+  const challengerVoted = isChallenger && bet.value.challenger?.winnerVote !== "UNDEFINED";
+
+  const isPunter = isChallenger || isOwner;
+  const voted = ownerVoted || challengerVoted;
+
+  return status == "CHALLENGED" && isPunter && !voted;
 }
 
 function ethValue(value) {
