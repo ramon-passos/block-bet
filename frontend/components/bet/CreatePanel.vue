@@ -68,7 +68,7 @@
         <div class="row">
           <div class="col" id="decision-col">
             <div class="row">
-              <p>Seu saldo:  {{ balance }} ETH</p>
+              <p>Seu saldo:  {{ balance ? balance : 0 }} ETH</p>
             </div>
           </div>
         </div>
