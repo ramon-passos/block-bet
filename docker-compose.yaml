@@ -13,14 +13,6 @@ services:
     volumes:
      - ./server:/app:cached
 
-  metacoin:
-    build:
-      context: ./metacoin
-    ports:
-     - 8545:8545
-    volumes:
-     - ./metacoin:/app:cached
-
   front-end:
     build:
       context: ./frontend
