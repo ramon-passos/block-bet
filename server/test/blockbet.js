@@ -172,6 +172,35 @@ contract("BlockBet", (accounts) => {
         assert.ok(error.message.includes("Only owner or challenger can vote"));
       }
     });
+
+    it("should throw an error if the challenger try to vote again", async () => {
+      try {
+        await blockBetInstance.voteWinner(createdUuid, 1, {
+          from: accounts[1],
+        });
+        await blockBetInstance.voteWinner(createdUuid, 1, {
+          from: accounts[1],
+        });
+        assert.fail();
+      } catch (error) {
+        console.log(error.message);
+        assert.ok(error.message.includes("Challenger has already voted"));
+      }
+    });
+
+    it("should throw an error if the owner try to vote again", async () => {
+      try {
+        await blockBetInstance.voteWinner(createdUuid, 1, {
+          from: accounts[0],
+        });
+        await blockBetInstance.voteWinner(createdUuid, 1, {
+          from: accounts[0],
+        });
+        assert.fail();
+      } catch (error) {
+        assert.ok(error.message.includes("Owner has already voted"));
+      }
+    });
   });
   describe("auditBet", () => {
     let createdUuid;

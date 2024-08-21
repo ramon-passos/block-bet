@@ -125,8 +125,16 @@ contract BlockBet {
         );
 
         if (msg.sender == bet.owner.punterAddress) {
+            require(
+                bet.owner.winnerVote == DataTypes.WinnerVote.UNDEFINED,
+                "Owner has already voted"
+            );
             bets[index].owner.winnerVote = winnerVote;
         } else {
+            require(
+                bet.challenger.winnerVote == DataTypes.WinnerVote.UNDEFINED,
+                "Challenger has already voted"
+            );
             bets[index].challenger.winnerVote = winnerVote;
         }
 
