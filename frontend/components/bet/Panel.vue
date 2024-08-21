@@ -86,7 +86,7 @@
             </div>
             
             <div class="col action-button">
-              <Button buttonText="Auditar aposta" />
+              <Button buttonText="Auditar aposta" :buttonFunction="auditBet"/>
             </div>
           </div>
         </div>
@@ -161,7 +161,11 @@ const betIsCancelable = (status) => {
 }
 
 const betIsContested = (status) => {
-  return status == "CONTESTED";
+  const ownerAddress = bet.value.owner?.punterAddress;
+  const challengerAddress = bet.value.challenger?.punterAddress;
+  const isNotAPunter = ownerAddress !== account.value && challengerAddress !== account.value
+
+  return status == "CONTESTED" && isNotAPunter;
 }
 
 const showWinnerVote = (status) => {
@@ -201,7 +205,15 @@ function challengeBet() {
 }
 
 function voteWinner() {
-  blockBetService.voteWinner(uuid, account.value, selectedVote.value)
+  blockBetService.voteWinner(uuid, account.value, selectedVote.value).then(data => {
+    console.log(data);
+  }); 
+}
+
+function auditBet() {
+  blockBetService.auditBet(uuid, account.value, selectedWinner.value).then(data => {
+    console.log(data);
+  });
 }
 
 watch(
