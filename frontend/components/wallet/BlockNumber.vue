@@ -1,5 +1,5 @@
 <template>
-  <span class="font-medium">Block Number</span>
+  <span class="font-medium">Número do Bloco</span>
   <span role="img" aria-label="numbers"> 🔢 </span>
   <span>{{ blockNumber === null ? "Error" : blockNumber || "" }}</span>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <span class="font-medium">Chain Id</span>
+  <span class="font-medium">Id da Cadeia</span>
   <span role="img" aria-label="chain"> ⛓ </span>
   <span>{{ chainId || "" }}</span>
 </template>

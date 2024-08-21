@@ -4,9 +4,9 @@
       <Title>Connect your Wallet</Title>
     </Head>
   </div>
-  <div class="col bg-white min-h-[80vh] md:flex items-center justify-center text-white">
+  <div class="col min-h-[80vh] md:flex items-center justify-center text-white" style="background-color: #1b1b1b">
     <div
-      class="relative md:max-w-lg min-h-screen md:min-h-0 w-full md:mx-auto bg-neutral-800 shadow-lg md:rounded-lg px-8 py-6">
+      class="relative md:max-w-lg min-h-screen md:min-h-0 w-full md:mx-auto bg-neutral-800 shadow-lg md:rounded-lg px-8 py-6" style="background-color: rgb(59, 59, 59);">
       <WalletHeader />
 
       <hr :style="{ margin: '2rem' }" />
@@ -40,7 +40,7 @@
         <button v-if="active"
           class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-red-800 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
           @click="deactivate">
-          Deactivate
+          Desconectar
         </button>
 
         <h4 v-if="!!error" :style="{ marginTop: '1rem', marginBottom: '0' }">
@@ -61,8 +61,8 @@ import {
 import { UserRejectedRequestError as UserRejectedRequestErrorWalletConnect } from "@web3-react/walletconnect-connector";
 
 enum ConnectorNames {
-  Injected = "Injected",
-  Network = "Network",
+  Injected = "Injetada",
+  Network = "Rede",
   WalletConnect = "WalletConnect",
 }
 
@@ -74,17 +74,17 @@ const connectorsByName: { [connectorName in ConnectorNames]: any } = {
 
 function getErrorMessage(error: Error) {
   if (error instanceof NoEthereumProviderError) {
-    return "No Ethereum browser extension detected, install MetaMask on desktop or visit from a dApp browser on mobile.";
+    return "Nenhuma extensão Ethereum detectada, instale MetaMask no desktop ou visite a partir de um navegador dApp no celular.";
   } else if (error instanceof UnsupportedChainIdError) {
-    return "You're connected to an unsupported network.";
+    return "Você está conectado à uma rede não suportada.";
   } else if (
     error instanceof UserRejectedRequestErrorInjected ||
     error instanceof UserRejectedRequestErrorWalletConnect
   ) {
-    return "Please authorize this website to access your Ethereum account.";
+    return "Por favor, autorize este site à acessar sua conta Ethereum.";
   } else {
     console.error(error);
-    return "An unknown error occurred. Check the console for more details.";
+    return "Um erro desconhecido aconteceu. Verifique o console para mais detalhes.";
   }
 }
 

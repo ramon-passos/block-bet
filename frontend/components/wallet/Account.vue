@@ -1,5 +1,5 @@
 <template>
-  <span class="font-medium">Account</span>
+  <span class="font-medium">Conta</span>
   <span role="img" aria-label="robot"> 🤖 </span>
   <span>
     {{
