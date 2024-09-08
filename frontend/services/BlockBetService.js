@@ -122,8 +122,12 @@ export class BlockBetService {
   }
 
   _translate_winner_vote(vote) {
-    const translated = vote === "owner" ? 1 : 2;
+    const winnerVoteMap = {
+      "owner": 1,
+      "challenger": 2,
+      "invalid": 3 
+    }
 
-    return translated
+    return winnerVoteMap[vote];
   }
 }
